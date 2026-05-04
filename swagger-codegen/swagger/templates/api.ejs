@@ -1,0 +1,16 @@
+<%
+const { utils, route, config, modelTypes } = it;
+const { _, pascalCase, require } = utils;
+const apiClassName = pascalCase(route.moduleName);
+const routes = route.routes;
+const dataContracts = _.map(modelTypes, "name");
+%>
+
+<% if (dataContracts.length) { %>
+import { <%~ dataContracts.join(", ") %> } from "../types"
+<% } %>
+import request, { RequestConfig, IRequestExtraConfig } from "../../service/Api"
+
+<% for (const route of routes) { %>
+  <%~ includeFile('./procedure-call.ejs', { ...it, route }) %>
+<% } %>

@@ -1,0 +1,266 @@
+import { useLayoutEffect, useEffect, useState } from 'react';
+import {
+  Form,
+  Input,
+  InputNumber,
+  DatePicker,
+  TimePicker,
+  Button,
+  Space,
+  Flex
+} from 'antd';
+import dayjs from 'dayjs';
+
+import type { FormProps } from 'antd';
+export type DataAction = 'view' | 'add' | 'edit' | 'delete';
+
+export default ({
+  //   action,
+  displayColumns,
+  data,
+  //   loading
+  handleDataChange
+  //   handleSubmit,
+  //   handleCancel
+}: {
+  //   action: DataAction;
+  displayColumns: any[];
+  data: any;
+  handleDataChange: (action: DataAction, data: any) => Promise<void>;
+}) => {
+  const [form] = Form.useForm();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [dataAction, setDataAction] = useState<DataAction>('view');
+
+  // Set form initial data
+  form.resetFields();
+  if (dataAction === 'add') {
+    form.setFieldsValue(null);
+  } else {
+    form.setFieldsValue({ ...data });
+  }
+
+  const renderFormField = (field: any) => {
+    const getRules = () => {
+      const rules: any[] = [];
+      if (field.required) {
+        rules.push({ required: true, message: `Please input ${field.label}!` });
+      }
+      if (field.type === 'email') {
+        rules.push({ type: 'email', message: 'Please enter a valid email!' });
+      }
+      return rules;
+    };
+
+    switch (field.type) {
+      case 'number':
+        return (
+          <Form.Item
+            key={field.name}
+            name={field.name}
+            label={field.label}
+            rules={getRules()}
+            getValueProps={(value) => ({
+              value: value ? value : ''
+            })}
+          >
+            <InputNumber style={{ width: '100%' }} />
+          </Form.Item>
+        );
+      case 'time':
+        return (
+          <Form.Item
+            key={field.name}
+            name={field.name}
+            label={field.label}
+            rules={getRules()}
+            getValueProps={(value) => ({
+              value: value ? dayjs(value) : undefined
+            })}
+          >
+            <TimePicker style={{ width: '100%' }} />
+          </Form.Item>
+        );
+      case 'date':
+        return (
+          <Form.Item
+            key={field.name}
+            name={field.name}
+            label={field.label}
+            rules={getRules()}
+            getValueProps={(value) => ({
+              value: value ? dayjs(value) : undefined
+            })}
+          >
+            <DatePicker style={{ width: '100%' }} />
+          </Form.Item>
+        );
+      case 'datetime':
+        return (
+          <Form.Item
+            key={field.name}
+            name={field.name}
+            label={field.label}
+            rules={getRules()}
+            getValueProps={(value) => ({
+              value: value ? dayjs(value) : undefined
+            })}
+          >
+            <DatePicker showTime style={{ width: '100%' }} />
+          </Form.Item>
+        );
+      case 'email':
+        return (
+          <Form.Item
+            key={field.name}
+            name={field.name}
+            label={field.label}
+            rules={getRules()}
+            getValueProps={(value) => ({
+              value: value ? value : ''
+            })}
+          >
+            <Input type="email" />
+          </Form.Item>
+        );
+      case 'boolean':
+        return (
+          <Form.Item
+            key={field.name}
+            name={field.name}
+            label={field.label}
+            valuePropName="checked"
+            rules={getRules()}
+            getValueProps={(value) => ({
+              value: value ? value : ''
+            })}
+          >
+            <Input type="checkbox" />
+          </Form.Item>
+        );
+      default:
+        return (
+          <Form.Item
+            key={field.name}
+            name={field.name}
+            label={field.label}
+            rules={getRules()}
+            getValueProps={(value) => ({
+              value: value ? value : ''
+            })}
+          >
+            <Input />
+          </Form.Item>
+        );
+    }
+  };
+
+  const handleSubmit: FormProps['onFinish'] = async (values) => {
+    setLoading(true);
+    try {
+      // Format date fields to yyyy-MM-dd format
+      const formattedValues = { ...values };
+      console.log('1');
+      for (const [key, value] of Object.entries(formattedValues)) {
+        if (value && typeof value === 'object' && value !== null) {
+          // Check if it's a moment object (Ant Design DatePicker)
+          if ('format' in value && typeof value.format === 'function') {
+            // Find the field type to determine the format
+            const field = displayColumns.find((f) => f.name === key);
+            if (field && field.type === 'datetime') {
+              // Format datetime fields to YYYY-MM-DD hh:mm:ss
+              formattedValues[key] = value.format(`YYYY-MM-DDTHH:mm:ss`);
+            } else if (field && field.type === 'time') {
+              formattedValues[key] = value.format(`HH:mm:ss`);
+            } else {
+              // Format date fields to YYYY-MM-DD
+              formattedValues[key] = value.format('YYYY-MM-DD');
+            }
+          } else if (value instanceof Date) {
+            // Handle regular Date objects
+            const year = value.getFullYear();
+            const month = String(value.getMonth() + 1).padStart(2, '0');
+            const day = String(value.getDate()).padStart(2, '0');
+            formattedValues[key] = `${year}-${month}-${day}`;
+          }
+        }
+      }
+
+      await handleDataChange(dataAction, formattedValues);
+      setDataAction('view');
+    } catch (error) {
+      console.error('Error adding item:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAddNew = () => {
+    console.log(`add new`);
+    form.resetFields();
+    form.setFieldsValue(null);
+    setDataAction('add');
+  };
+
+  const handleCancel = () => {
+    setDataAction('view');
+  };
+
+  const handleShowAudit = () => {};
+
+  return (
+    <div>
+      <Flex
+        align="center"
+        gap={5}
+        justify="space-between"
+        style={{ marginBottom: 20 }}
+      >
+        <h3>Item Details</h3>
+        <Flex gap={5} align="center" justify="space-between">
+          <Button type="primary" onClick={handleAddNew}>
+            New
+          </Button>
+          <Button type="primary" onClick={() => setDataAction('edit')}>
+            Edit
+          </Button>
+          <Button
+            type="primary"
+            danger
+            onClick={() => handleDataChange('delete', data)}
+          >
+            Delete
+          </Button>
+          <Button type="default" onClick={handleShowAudit}>
+            Audit log
+          </Button>
+        </Flex>
+      </Flex>
+      <Flex>
+        <Form
+          key={'data-form'}
+          form={form}
+          layout="vertical"
+          disabled={loading || dataAction === 'view'}
+          onFinish={handleSubmit}
+          preserve={false}
+          style={{ width: '100%' }}
+        >
+          {(dataAction === 'add' || dataAction === 'edit') && (
+            <Flex gap={5}>
+              <Form.Item>
+                <Space>
+                  <Button type="primary" htmlType="submit" loading={loading}>
+                    Save
+                  </Button>
+                  <Button onClick={handleCancel}>Cancel</Button>
+                </Space>
+              </Form.Item>
+            </Flex>
+          )}
+          {displayColumns.map((field) => renderFormField(field))}
+        </Form>
+      </Flex>
+    </div>
+  );
+};

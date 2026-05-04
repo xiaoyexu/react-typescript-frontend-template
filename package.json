@@ -1,0 +1,36 @@
+{
+  "name": "template-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "antd": "^6.3.7",
+    "antd-mobile": "^5.42.3",
+    "axios": "^1.16.0",
+    "glob": "^13.0.6",
+    "i18next-browser-languagedetector": "^8.2.1",
+    "i18next-http-backend": "^3.0.6",
+    "jwt-decode": "^4.0.0",
+    "qs": "^6.15.1",
+    "react-i18next": "^17.0.6",
+    "react-router-dom": "^7.14.2",
+    "swagger-typescript-api": "^13.7.2"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "4.1.12",
+    "@types/node": "^25.6.0",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "4.7.0",
+    "@vitejs/plugin-react-swc": "^3.10.2",
+    "sass-embedded": "^1.99.0",
+    "tailwindcss": "4.1.12",
+    "vite": "6.3.5"
+  },
+  "scripts": {
+    "dev": "vite --mode dev",
+    "prd": "vite --mode production",
+    "build": "vite build",
+    "build:prd:nomap": "set GENERATE_SOURCEMAP=false && vite build --mode production",
+    "swaggerApi": "node ./swagger-codegen/swagger/generateApiFromSwagger.js --module=sample"
+  }
+}
