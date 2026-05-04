@@ -1,16 +1,6 @@
-import React, { BaseSyntheticEvent, useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  Table,
-  Space,
-  Form,
-  Button,
-  Upload,
-  UploadFile,
-  UploadProps,
-  message,
-  Flex
-} from 'antd';
+import { Button, Upload, Flex, notification } from 'antd';
 import type { UploadRequestOption } from '@rc-component/upload/lib/interface';
 import { IEntity } from '@/model/model';
 import { DataAction } from '../components/DataDetailView';
@@ -25,33 +15,29 @@ import {
   exportStudents
 } from '@/api/modules/Students';
 
-import { IImportStudentResponse, IStudent, IStudents } from '@/api/types';
+import { IStudent } from '@/api/types';
 import ResizeableView from '../components/ResizableView/ResizableView';
 import DataListView from '../components/DataListView';
 import DataDetailView from '../components/DataDetailView';
-import { DownloadFile, downloadFile, transformResponse } from '@/service/Utils';
-
-// Import AddItemModal component
-// import AddItemModal from '../components/AddItemModal';
-// Import EditItemModal component
-// import EditItemModal from '../components/EditItemModal';
+import {
+  DownloadFile,
+  downloadFile,
+  transformResponse,
+  openNotificationWithIcon
+} from '@/service/Utils';
 
 type TableData = IStudent;
 
 const Home: React.FC = () => {
+  const navigate = useNavigate();
+  const [api, contextHolder] = notification.useNotification();
   const [activeTable, setActiveTable] = useState<string>('students');
   const [data, setData] = useState<TableData[]>([]);
-  const [dataAction, setDataAction] = useState<DataAction>('view');
 
   const [selectedItem, setSelectedItem] = useState<TableData | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>('');
-  //   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  //   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
-  //   const [editItemData, setEditItemData] = useState<any>(null);
-
-  const navigate = useNavigate();
 
   // Available tables
   const tables = [{ id: 'students', name: 'Students', icon: '👤' }];
@@ -119,16 +105,6 @@ const Home: React.FC = () => {
     fetchData();
   }, [activeTable]);
 
-  // Handle edit action
-  const handleEdit = async () => {
-    if (!selectedItem) return;
-
-    // Set the item data to be edited and open the edit modal
-    // setEditItemData(selectedItem);
-    // setIsEditModalOpen(true);
-    setDataAction('edit');
-  };
-
   // Handle delete action
   const handleDelete = async () => {
     if (!selectedItem) return;
@@ -159,7 +135,10 @@ const Home: React.FC = () => {
         );
 
         // Show success message
-        alert(
+        openNotificationWithIcon(
+          api,
+          'success',
+          'Success',
           `Successfully deleted ${activeTable} item with ID: ${selectedItem.id}`
         );
 
@@ -170,7 +149,7 @@ const Home: React.FC = () => {
         await fetchData();
       } catch (err) {
         console.error('Error deleting item:', err);
-        alert('Error deleting item');
+        openNotificationWithIcon(api, 'error', 'Error', 'Error deleting item');
       }
     }
   };
@@ -196,55 +175,6 @@ const Home: React.FC = () => {
     }
   };
 
-  const handleImport = async () => {
-    // if (selectedFile == null) {
-    //   alert('no file selected');
-    //   return;
-    // }
-    // const formData = new FormData();
-    // formData.append('file', selectedFile, selectedFile.name);
-    // if (!activeTable) return;
-    // switch (activeTable) {
-    //   case 'students':
-    //     importStudents(formData).then((res: any) => {
-    //       alert(`${res.data}`);
-    //       ref.current.value = '';
-    //       setSelectedFile(null);
-    //     });
-    //     break;
-    //   default:
-    //     throw new Error('Unknown table for deletion');
-    // }
-
-    console.log(`handleUpload`);
-
-    // if (!activeTable) return;
-    // const formData = new FormData();
-    // if (!fileList || fileList.length == 0) {
-    //   return;
-    // }
-
-    // fileList.forEach((file) => {
-    //   formData.append('file', file.originFileObj as Blob);
-    // });
-
-    // switch (activeTable) {
-    //   case 'students':
-    //     importStudents(formData)
-    //       .then((res: IImportStudentResponse) => {
-    //         alert(`${res.status?.message}`);
-    //         // setFileList([]);
-    //       })
-    //       .catch((error: any) => {
-    //         console.error('Error importing students:', error);
-    //         alert('Error importing students');
-    //       });
-    //     break;
-    //   default:
-    //     throw new Error('Unknown table for deletion');
-    // }
-  };
-
   // Handle logout
   const handleLogout = () => {
     // Remove user from session storage
@@ -252,14 +182,6 @@ const Home: React.FC = () => {
 
     // Redirect to login page
     navigate('/login');
-  };
-
-  // Handle add new action
-  const handleAddNew = async () => {
-    // Open the modal to add a new item
-    // console.log('ad new');
-    // setIsModalOpen(true);
-    setDataAction('add');
   };
 
   // Handle editing an item via the modal
@@ -281,7 +203,6 @@ const Home: React.FC = () => {
           throw new Error('Unknown table for update');
       }
 
-      console.log(`update`);
       // Update the item in the local data array
       setData((prevData) =>
         prevData.map((item) =>
@@ -290,20 +211,24 @@ const Home: React.FC = () => {
       );
 
       // Show success message
-      alert(`Successfully updated ${activeTable} item`);
+      openNotificationWithIcon(
+        api,
+        'success',
+        'Success',
+        `Successfully updated ${activeTable} item`
+      );
 
       // Close the edit modal
       //   setIsEditModalOpen(false);
 
       // Clear selection
       setSelectedItem(updatedItem.data);
-      setDataAction('view');
 
       // Refetch data to update the UI
       await fetchData();
     } catch (err) {
       console.error('Error updating item:', err);
-      alert('Error updating item');
+      openNotificationWithIcon(api, 'error', 'Error', 'Error updating item');
     }
   };
 
@@ -326,66 +251,76 @@ const Home: React.FC = () => {
       setData((prevData) => [...prevData, newItem]);
 
       // Show success message
-      alert(`Successfully created new ${activeTable} item`);
+      openNotificationWithIcon(
+        api,
+        'success',
+        'Success',
+        `Successfully created new ${activeTable} item`
+      );
+
+      setSelectedItem(newItem.data);
 
       // Refetch data to update the UI
       await fetchData();
     } catch (err) {
       console.error('Error adding new item:', err);
-      alert('Error adding new item');
+      openNotificationWithIcon(api, 'error', 'Error', 'Error adding new item');
     }
   };
 
-  let columns: any[] = [];
+  const getListFields = () => {
+    let columns: any[] = [];
 
-  if (activeTable === 'students') {
-    columns = [
-      { title: 'ID', dataIndex: 'id', key: 'id', width: 220 },
-      { title: 'Name', dataIndex: 'name', key: 'name', width: 150 },
-      {
-        title: 'Age',
-        dataIndex: 'age',
-        key: 'age',
-        width: 200
-      },
-      {
-        title: 'Height',
-        dataIndex: 'height',
-        key: 'height',
-        width: 150
-      },
-      {
-        title: 'Birthday',
-        dataIndex: 'birthday',
-        key: 'birthday',
-        width: 150
-      },
-      {
-        title: 'Created At',
-        dataIndex: 'createdAt',
-        key: 'createdAt',
-        width: 150
-      },
-      {
-        title: 'Created By',
-        dataIndex: 'createdBy',
-        key: 'createdBy',
-        width: 150
-      },
-      {
-        title: 'Updated At',
-        dataIndex: 'updatedAt',
-        key: 'updatedAt',
-        width: 150
-      },
-      {
-        title: 'Updated By',
-        dataIndex: 'updatedBy',
-        key: 'updatedBy',
-        width: 150
-      }
-    ];
-  }
+    if (activeTable === 'students') {
+      columns = [
+        { title: 'ID', dataIndex: 'id', key: 'id', width: 220 },
+        { title: 'Name', dataIndex: 'name', key: 'name', width: 150 },
+        {
+          title: 'Age',
+          dataIndex: 'age',
+          key: 'age',
+          width: 200
+        },
+        {
+          title: 'Height',
+          dataIndex: 'height',
+          key: 'height',
+          width: 150
+        },
+        {
+          title: 'Birthday',
+          dataIndex: 'birthday',
+          key: 'birthday',
+          width: 150
+        },
+        {
+          title: 'Created At',
+          dataIndex: 'createdAt',
+          key: 'createdAt',
+          width: 150
+        },
+        {
+          title: 'Created By',
+          dataIndex: 'createdBy',
+          key: 'createdBy',
+          width: 150
+        },
+        {
+          title: 'Updated At',
+          dataIndex: 'updatedAt',
+          key: 'updatedAt',
+          width: 150
+        },
+        {
+          title: 'Updated By',
+          dataIndex: 'updatedBy',
+          key: 'updatedBy',
+          width: 150
+        }
+      ];
+    }
+    return columns;
+  };
 
   const handleAuditLogClick = () => {
     // Navigate to the audit log page with table type and item ID
@@ -434,25 +369,31 @@ const Home: React.FC = () => {
     }
   };
 
-  const handleCustomRequest = async (
+  const handleImport = async (
     options: UploadRequestOption,
     _: { defaultRequest: (option: UploadRequestOption) => void }
   ) => {
     if (!activeTable) return;
     const formData = new FormData();
     formData.append('file', options.file);
+
+    let importFunction: Promise<any>;
+
     switch (activeTable) {
       case 'students':
-        return importStudents(formData)
-          .then((res: IImportStudentResponse) => {
-            alert(`${res.status?.message}`);
-          })
-          .catch((error: any) => {
-            alert(`Error importing students: ${error.message}`);
-          });
+        importFunction = importStudents(formData);
+        break;
       default:
-        return Promise.reject(new Error('Unknown table for deletion'));
+        return Promise.reject(new Error('Unknown table for import'));
     }
+
+    return importFunction
+      .then((res) => {
+        openNotificationWithIcon(api, 'info', 'Info', 'Imported');
+      })
+      .catch((error) => {
+        openNotificationWithIcon(api, 'error', 'Error', error.message);
+      });
   };
 
   return (
@@ -500,7 +441,7 @@ const Home: React.FC = () => {
               <div className="content-actions">
                 <Flex gap={5} justify="end">
                   <Upload
-                    customRequest={handleCustomRequest}
+                    customRequest={handleImport}
                     showUploadList={false}
                     maxCount={1}
                   >
@@ -521,7 +462,7 @@ const Home: React.FC = () => {
             leftView={
               <DataListView
                 filteredData={filteredData}
-                columns={columns}
+                columns={getListFields()}
                 selectedItem={selectedItem}
                 handleItemSelect={handleItemSelect}
               />

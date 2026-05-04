@@ -111,6 +111,34 @@ const transformResponse = (data: Blob, headers: AxiosResponseHeaders) => {
   return { data: data, name: name };
 };
 
+type NotificationType = 'success' | 'info' | 'warning' | 'error';
+
+const openNotificationWithIcon = (
+  api: any,
+  type: NotificationType,
+  message: string,
+  err: any
+) => {
+  console.log(`response type ${err}`);
+  console.log(`response type ${typeof err}`);
+  var errMsg = '';
+  if (err == undefined) {
+    errMsg = '';
+  } else if (typeof err === 'string') {
+    errMsg = err;
+  } else if (err.message) {
+    errMsg = err.message;
+  } else if (err.response) {
+    errMsg = err.response.data?.code?.description;
+  }
+
+  api[type]({
+    message: message,
+    description: errMsg,
+    duration: 2
+  });
+};
+
 export {
   // stripUUID,
   // debounce,
@@ -123,7 +151,8 @@ export {
   getUser,
   formatDate,
   downloadFile,
-  transformResponse
+  transformResponse,
+  openNotificationWithIcon
 };
 
-export type { DownloadFile };
+export type { DownloadFile, NotificationType };
