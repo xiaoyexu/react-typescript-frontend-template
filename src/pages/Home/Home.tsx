@@ -14,25 +14,30 @@ import {
   importStudents,
   exportStudents
 } from '@/api/modules/Students';
-
-import { IStudent } from '@/api/types';
+import { searchStudentAudits } from '@/api/modules/StudentAudits';
+import { IStudent, IStudentAudit } from '@/api/types';
 import ResizeableView from '../components/ResizableView/ResizableView';
 import DataListView from '../components/DataListView';
 import DataDetailView from '../components/DataDetailView';
+import DataAuditView from '../components/DataAuditView';
 import {
   DownloadFile,
   downloadFile,
   transformResponse,
   openNotificationWithIcon
 } from '@/service/Utils';
+import { getTableFields } from '@/service/TableConfig';
 
 type TableData = IStudent;
+type AuditTableData = IStudentAudit;
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
   const [api, contextHolder] = notification.useNotification();
   const [activeTable, setActiveTable] = useState<string>('students');
   const [data, setData] = useState<TableData[]>([]);
+  const [auditData, setAuditData] = useState<TableData[]>([]);
+  const [showAuditModal, setShowAuditModal] = useState<boolean>(false);
 
   const [selectedItem, setSelectedItem] = useState<TableData | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -61,6 +66,38 @@ const Home: React.FC = () => {
       // Assuming the API returns data in a standard format
       if (result && result.data) {
         setData(result.data?.data || result.data || []);
+      } else {
+        setError('Invalid API response format');
+      }
+    } catch (err) {
+      setError('An error occurred while fetching data');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchAuditData = async (id: string) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      let result: any;
+
+      switch (activeTable) {
+        case 'students':
+          result = await searchStudentAudits(
+            { ids: [id] },
+            { limit: 1000, offset: 0 }
+          );
+          break;
+        default:
+          throw new Error('Unknown table');
+      }
+
+      // Assuming the API returns data in a standard format
+      if (result && result.data) {
+        setAuditData(() => result.data?.data || result.data || []);
       } else {
         setError('Invalid API response format');
       }
@@ -268,82 +305,21 @@ const Home: React.FC = () => {
     }
   };
 
-  const getListFields = () => {
-    let columns: any[] = [];
-
-    if (activeTable === 'students') {
-      columns = [
-        { title: 'ID', dataIndex: 'id', key: 'id', width: 220 },
-        { title: 'Name', dataIndex: 'name', key: 'name', width: 150 },
-        {
-          title: 'Age',
-          dataIndex: 'age',
-          key: 'age',
-          width: 200
-        },
-        {
-          title: 'Height',
-          dataIndex: 'height',
-          key: 'height',
-          width: 150
-        },
-        {
-          title: 'Birthday',
-          dataIndex: 'birthday',
-          key: 'birthday',
-          width: 150
-        },
-        {
-          title: 'Created At',
-          dataIndex: 'createdAt',
-          key: 'createdAt',
-          width: 150
-        },
-        {
-          title: 'Created By',
-          dataIndex: 'createdBy',
-          key: 'createdBy',
-          width: 150
-        },
-        {
-          title: 'Updated At',
-          dataIndex: 'updatedAt',
-          key: 'updatedAt',
-          width: 150
-        },
-        {
-          title: 'Updated By',
-          dataIndex: 'updatedBy',
-          key: 'updatedBy',
-          width: 150
-        }
-      ];
-    }
-    return columns;
+  const getTableFieldsForDetail = () => {
+    return getTableFields(activeTable);
   };
 
-  const handleAuditLogClick = () => {
-    // Navigate to the audit log page with table type and item ID
-    // navigate(`/audit-log/${activeTable}/${selectedItem.id}`);
+  const getTableFieldsForList = () => {
+    return getTableFields(activeTable);
   };
 
-  const getDisplayFields = () => {
-    switch (activeTable) {
-      case 'students':
-        return [
-          { name: 'id', label: 'ID', type: 'text' },
-          { name: 'name', label: 'Name', type: 'text' },
-          { name: 'age', label: 'Age', type: 'text' },
-          { name: 'height', label: 'Height', type: 'number' },
-          { name: 'birthday', label: 'Birthday', type: 'date' },
-          { name: 'createdAt', label: 'Created At', type: 'datetime' },
-          { name: 'createdBy', label: 'Created By', type: 'text' },
-          { name: 'updatedAt', label: 'Updated At', type: 'datetime' },
-          { name: 'updatedBy', label: 'Updated By', type: 'text' }
-        ];
-      default:
-        return [];
-    }
+  const getTableFieldsForAuditList = () => {
+    return getTableFields(activeTable, true);
+  };
+
+  const handleShowAudit = (id: string) => {
+    fetchAuditData(id);
+    setShowAuditModal(true);
   };
 
   const handleDataChange = async (action: DataAction, data: any) => {
@@ -462,21 +438,28 @@ const Home: React.FC = () => {
             leftView={
               <DataListView
                 filteredData={filteredData}
-                columns={getListFields()}
+                columns={getTableFieldsForList()}
                 selectedItem={selectedItem}
                 handleItemSelect={handleItemSelect}
               />
             }
             rightView={
               <DataDetailView
-                displayColumns={getDisplayFields()}
+                displayColumns={getTableFieldsForDetail()}
                 data={selectedItem}
                 handleDataChange={handleDataChange}
+                handleShowAudit={handleShowAudit}
               />
             }
           />
         </div>
       </div>
+      <DataAuditView
+        columns={getTableFieldsForAuditList()}
+        filteredData={auditData}
+        open={showAuditModal}
+        handleOk={() => setShowAuditModal(false)}
+      />
     </div>
   );
 };

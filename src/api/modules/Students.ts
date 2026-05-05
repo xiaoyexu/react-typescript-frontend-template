@@ -18,6 +18,7 @@ import {
   IGetStudentResponse,
   IImportStudentResponse,
   IImportStudentsPayload,
+  ISearchStudentAuditResponse,
   ISearchStudentRequest,
   ISearchStudentResponse,
   IUpdateStudentRequest,
@@ -163,6 +164,41 @@ export const deleteSingleStudent = (
     {
       url: `/students/${studentId}`,
       method: 'DELETE',
+      ...params
+    },
+    { ...extraConfig }
+  );
+/**
+ * @description Get Single Student Audits
+ *
+ * @tags students
+ * @name GetSingleStudentAudits
+ * @request GET:/students/{student-id}/audits
+ * @response `200` `ISearchStudentAuditResponse` OK
+ * @response `400` `IErrorResponse` Bad Request
+ * @response `401` `IErrorResponse` Unauthorized
+ * @response `403` `IErrorResponse` Forbidden
+ * @response `404` `IErrorResponse` Not found
+ * @response `500` `IErrorResponse` Internal Server Error
+ */
+export const getSingleStudentAudits = (
+  studentId: string,
+  query?: {
+    /** @default 20 */
+    limit?: number;
+    /** @default 0 */
+    offset?: number;
+    /** @default "" */
+    sortBy?: string;
+  },
+  params: RequestConfig = {},
+  extraConfig: Partial<IRequestExtraConfig> = {}
+) =>
+  request<ISearchStudentAuditResponse>(
+    {
+      url: `/students/${studentId}/audits`,
+      method: 'GET',
+      params: query,
       ...params
     },
     { ...extraConfig }

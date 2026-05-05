@@ -1,4 +1,4 @@
-import { useLayoutEffect, useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   Form,
   Input,
@@ -12,21 +12,19 @@ import {
 import dayjs from 'dayjs';
 
 import type { FormProps } from 'antd';
+
 export type DataAction = 'view' | 'add' | 'edit' | 'delete';
 
 export default ({
-  //   action,
   displayColumns,
   data,
-  //   loading
-  handleDataChange
-  //   handleSubmit,
-  //   handleCancel
+  handleDataChange,
+  handleShowAudit
 }: {
-  //   action: DataAction;
   displayColumns: any[];
   data: any;
   handleDataChange: (action: DataAction, data: any) => Promise<void>;
+  handleShowAudit: (id: string) => void;
 }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState<boolean>(false);
@@ -56,9 +54,9 @@ export default ({
       case 'number':
         return (
           <Form.Item
-            key={field.name}
-            name={field.name}
-            label={field.label}
+            key={field.key}
+            name={field.key}
+            label={field.title}
             rules={getRules()}
             getValueProps={(value) => ({
               value: value ? value : ''
@@ -70,9 +68,9 @@ export default ({
       case 'time':
         return (
           <Form.Item
-            key={field.name}
-            name={field.name}
-            label={field.label}
+            key={field.key}
+            name={field.key}
+            label={field.title}
             rules={getRules()}
             getValueProps={(value) => ({
               value: value ? dayjs(value) : undefined
@@ -84,9 +82,9 @@ export default ({
       case 'date':
         return (
           <Form.Item
-            key={field.name}
-            name={field.name}
-            label={field.label}
+            key={field.key}
+            name={field.key}
+            label={field.title}
             rules={getRules()}
             getValueProps={(value) => ({
               value: value ? dayjs(value) : undefined
@@ -98,9 +96,9 @@ export default ({
       case 'datetime':
         return (
           <Form.Item
-            key={field.name}
-            name={field.name}
-            label={field.label}
+            key={field.key}
+            name={field.key}
+            label={field.title}
             rules={getRules()}
             getValueProps={(value) => ({
               value: value ? dayjs(value) : undefined
@@ -112,9 +110,9 @@ export default ({
       case 'email':
         return (
           <Form.Item
-            key={field.name}
-            name={field.name}
-            label={field.label}
+            key={field.key}
+            name={field.key}
+            label={field.title}
             rules={getRules()}
             getValueProps={(value) => ({
               value: value ? value : ''
@@ -126,9 +124,9 @@ export default ({
       case 'boolean':
         return (
           <Form.Item
-            key={field.name}
-            name={field.name}
-            label={field.label}
+            key={field.key}
+            name={field.key}
+            label={field.title}
             valuePropName="checked"
             rules={getRules()}
             getValueProps={(value) => ({
@@ -141,9 +139,9 @@ export default ({
       default:
         return (
           <Form.Item
-            key={field.name}
-            name={field.name}
-            label={field.label}
+            key={field.key}
+            name={field.key}
+            label={field.title}
             rules={getRules()}
             getValueProps={(value) => ({
               value: value ? value : ''
@@ -206,8 +204,6 @@ export default ({
     setDataAction('view');
   };
 
-  const handleShowAudit = () => {};
-
   return (
     <div>
       <Flex
@@ -231,7 +227,7 @@ export default ({
           >
             Delete
           </Button>
-          <Button type="default" onClick={handleShowAudit}>
+          <Button type="default" onClick={() => handleShowAudit(data?.id)}>
             Audit log
           </Button>
         </Flex>

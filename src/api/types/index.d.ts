@@ -32,6 +32,11 @@ export interface IException {
   reasonCode?: string;
 }
 
+export interface IGetStudentAuditResponse {
+  data?: IStudentAudit;
+  status?: IResponseStatus;
+}
+
 export interface IGetStudentResponse {
   data?: IStudent;
   status?: IResponseStatus;
@@ -57,6 +62,12 @@ export interface ILoginResponse {
   status?: IResponseStatus;
 }
 
+export interface IPagedStudentAudits {
+  data?: IStudentAudits;
+  /** @format int64 */
+  total?: number;
+}
+
 export interface IPagedStudents {
   data?: IStudents;
   /** @format int64 */
@@ -71,6 +82,19 @@ export interface IRefreshTokenResponse {
 export interface IResponseStatus {
   code?: string;
   message?: string;
+}
+
+export interface ISearchStudentAuditRequest {
+  createdAts?: IStringList;
+  createdBys?: IStringList;
+  ids?: IStringList;
+  updatedAts?: IStringList;
+  updatedBys?: IStringList;
+}
+
+export interface ISearchStudentAuditResponse {
+  data?: IPagedStudentAudits;
+  status?: IResponseStatus;
 }
 
 export interface ISearchStudentRequest {
@@ -103,6 +127,21 @@ export interface IStudent {
   updatedAt?: string;
   updatedBy?: string;
 }
+
+export interface IStudentAudit {
+  age?: number;
+  auditId?: string;
+  birthday?: string;
+  createdAt?: string;
+  createdBy?: string;
+  height?: number;
+  id?: string;
+  name?: string;
+  updatedAt?: string;
+  updatedBy?: string;
+}
+
+export type IStudentAudits = IStudentAudit[];
 
 export type IStudents = IStudent[];
 

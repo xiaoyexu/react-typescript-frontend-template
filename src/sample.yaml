@@ -1,4 +1,4 @@
-swagger: "2.0"
+swagger: '2.0'
 info:
   title: OpenAPI definition
   version: v0
@@ -21,20 +21,20 @@ consumes:
 parameters:
   Access-Token:
     name: Authorization
-    description: "Bearer + {space} + {accessToken}. Example: Bearer KGNsaWVudF9pZDpjbGllbnRfc2VjcmV0KQ=="
+    description: 'Bearer + {space} + {accessToken}. Example: Bearer KGNsaWVudF9pZDpjbGllbnRfc2VjcmV0KQ=='
     in: header
     required: true
     type: string
   X-APP-ENV:
     name: x-app-env
-    description: "Application Environment"
+    description: 'Application Environment'
     in: header
     required: true
     type: string
   Accept-Language:
     name: Accept-Language
     in: header
-    description: "language [en_HK, zh_HK, zh_CN]"
+    description: 'language [en_HK, zh_HK, zh_CN]'
     type: string
     enum:
       - en_HK
@@ -54,9 +54,14 @@ parameters:
     name: sortBy
     in: query
     type: string
-    default: ""
+    default: ''
   Student-Id:
     name: student-id
+    required: true
+    in: path
+    type: string
+  Student-Audit-Id:
+    name: student-audit-id
     required: true
     in: path
     type: string
@@ -84,27 +89,27 @@ paths:
           schema:
             $ref: '#/definitions/LoginRequest'
       responses:
-        "200":
+        '200':
           description: OK
           schema:
             $ref: '#/definitions/LoginResponse'
-        "400":
+        '400':
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        "401":
+        '401':
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        "403":
+        '403':
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        "404":
+        '404':
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        "500":
+        '500':
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -117,30 +122,31 @@ paths:
       parameters:
         - $ref: '#/parameters/Access-Token'
       responses:
-        "200":
+        '200':
           description: OK
           schema:
             $ref: '#/definitions/RefreshTokenResponse'
-        "400":
+        '400':
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        "401":
+        '401':
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        "403":
+        '403':
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        "404":
+        '404':
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        "500":
+        '500':
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
+  # student
   /students:
     post:
       tags:
@@ -154,27 +160,27 @@ paths:
           schema:
             $ref: '#/definitions/CreateStudentRequest'
       responses:
-        "200":
+        '200':
           description: OK
           schema:
             $ref: '#/definitions/CreateStudentResponse'
-        "400":
+        '400':
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        "401":
+        '401':
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        "403":
+        '403':
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        "404":
+        '404':
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        "500":
+        '500':
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -194,27 +200,27 @@ paths:
           schema:
             $ref: '#/definitions/SearchStudentRequest'
       responses:
-        "200":
+        '200':
           description: OK
           schema:
             $ref: '#/definitions/SearchStudentResponse'
-        "400":
+        '400':
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        "401":
+        '401':
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        "403":
+        '403':
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        "404":
+        '404':
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        "500":
+        '500':
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -227,27 +233,27 @@ paths:
       parameters:
         - $ref: '#/parameters/Student-Id'
       responses:
-        "200":
+        '200':
           description: OK
           schema:
             $ref: '#/definitions/GetStudentResponse'
-        "400":
+        '400':
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        "401":
+        '401':
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        "403":
+        '403':
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        "404":
+        '404':
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        "500":
+        '500':
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -264,27 +270,27 @@ paths:
           schema:
             $ref: '#/definitions/UpdateStudentRequest'
       responses:
-        "200":
+        '200':
           description: OK
           schema:
             $ref: '#/definitions/UpdateStudentResponse'
-        "400":
+        '400':
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        "401":
+        '401':
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        "403":
+        '403':
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        "404":
+        '404':
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        "500":
+        '500':
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -296,27 +302,63 @@ paths:
       parameters:
         - $ref: '#/parameters/Student-Id'
       responses:
-        "200":
+        '200':
           description: OK
           schema:
             $ref: '#/definitions/DeleteStudentResponse'
-        "400":
+        '400':
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        "401":
+        '401':
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        "403":
+        '403':
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        "404":
+        '404':
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        "500":
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /students/{student-id}/audits:
+    get:
+      tags:
+        - students
+      description: Get Single Student Audits
+      operationId: getSingleStudentAudits
+      parameters:
+        - $ref: '#/parameters/Student-Id'
+        - $ref: '#/parameters/Limit'
+        - $ref: '#/parameters/Offset'
+        - $ref: '#/parameters/SortBy'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SearchStudentAuditResponse'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -336,28 +378,28 @@ paths:
           schema:
             $ref: '#/definitions/SearchStudentRequest'
       responses:
-        "200":
+        '200':
           description: OK
           schema:
             type: string
             format: binary
-        "400":
+        '400':
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        "401":
+        '401':
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        "403":
+        '403':
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        "404":
+        '404':
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        "500":
+        '500':
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -375,27 +417,146 @@ paths:
           type: file
           required: true
       responses:
-        "200":
+        '200':
           description: OK
           schema:
             $ref: '#/definitions/ImportStudentResponse'
-        "400":
+        '400':
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        "401":
+        '401':
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        "403":
+        '403':
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        "404":
+        '404':
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        "500":
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+  # student audit
+  /student-audits/search:
+    post:
+      tags:
+        - student-audits
+      description: Search StudentAudits
+      operationId: searchStudentAudits
+      parameters:
+        - $ref: '#/parameters/Access-Token'
+        - $ref: '#/parameters/Limit'
+        - $ref: '#/parameters/Offset'
+        - $ref: '#/parameters/SortBy'
+        - in: body
+          name: searchStudentAuditRequest
+          required: true
+          schema:
+            $ref: '#/definitions/SearchStudentAuditRequest'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SearchStudentAuditResponse'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /student-audits/{student-audit-id}:
+    get:
+      tags:
+        - student-audits
+      description: Get Single StudentAudit
+      operationId: getSingleStudentAudit
+      parameters:
+        - $ref: '#/parameters/Access-Token'
+        - $ref: '#/parameters/Student-Audit-Id'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/GetStudentAuditResponse'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /student-audits/export:
+    post:
+      tags:
+        - student-audits
+      description: Export StudentAudits
+      operationId: exportStudentAudits
+      parameters:
+        - $ref: '#/parameters/Access-Token'
+        - $ref: '#/parameters/Limit'
+        - $ref: '#/parameters/Offset'
+        - $ref: '#/parameters/SortBy'
+        - in: body
+          name: searchStudentAuditRequest
+          required: true
+          schema:
+            $ref: '#/definitions/SearchStudentAuditRequest'
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+            format: binary
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -547,5 +708,65 @@ definitions:
     properties:
       data:
         type: string
+      status:
+        $ref: '#/definitions/ResponseStatus'
+
+  # studentAudit
+  PagedStudentAudits:
+    properties:
+      total:
+        type: integer
+        format: int64
+      data:
+        $ref: '#/definitions/StudentAudits'
+  StudentAudits:
+    type: array
+    items:
+      $ref: '#/definitions/StudentAudit'
+  StudentAudit:
+    properties:
+      auditId:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      age:
+        type: integer
+      height:
+        type: number
+      birthday:
+        type: string
+      createdBy:
+        type: string
+      createdAt:
+        type: string
+      updatedBy:
+        type: string
+      updatedAt:
+        type: string
+  SearchStudentAuditRequest:
+    type: object
+    properties:
+      ids:
+        $ref: '#/definitions/StringList'
+      createdAts:
+        $ref: '#/definitions/StringList'
+      updatedAts:
+        $ref: '#/definitions/StringList'
+      createdBys:
+        $ref: '#/definitions/StringList'
+      updatedBys:
+        $ref: '#/definitions/StringList'
+  SearchStudentAuditResponse:
+    properties:
+      data:
+        $ref: '#/definitions/PagedStudentAudits'
+      status:
+        $ref: '#/definitions/ResponseStatus'
+  GetStudentAuditResponse:
+    properties:
+      data:
+        $ref: '#/definitions/StudentAudit'
       status:
         $ref: '#/definitions/ResponseStatus'
