@@ -139,6 +139,10 @@ const openNotificationWithIcon = (
   });
 };
 
+const isAuthenticated = () => {
+  return getStorageItem('user') !== null;
+};
+
 export {
   // stripUUID,
   // debounce,
@@ -152,7 +156,8 @@ export {
   formatDate,
   downloadFile,
   transformResponse,
-  openNotificationWithIcon
+  openNotificationWithIcon,
+  isAuthenticated
 };
 
 export type { DownloadFile, NotificationType };
