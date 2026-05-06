@@ -245,17 +245,26 @@ export default ({
           <Button type="primary" onClick={handleAddNew}>
             New
           </Button>
-          <Button type="primary" onClick={() => setDataAction('edit')}>
+          <Button
+            type="primary"
+            onClick={() => setDataAction('edit')}
+            disabled={!data}
+          >
             Edit
           </Button>
           <Button
             type="primary"
             danger
             onClick={() => handleDataChange('delete', data)}
+            disabled={!data}
           >
             Delete
           </Button>
-          <Button type="default" onClick={() => handleShowAudit(data?.id)}>
+          <Button
+            type="default"
+            onClick={() => handleShowAudit(data?.id)}
+            disabled={!data}
+          >
             Audit log
           </Button>
         </Flex>
