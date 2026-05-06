@@ -36,13 +36,14 @@ const DataListView: React.ForwardRefExoticComponent<
     const [totalPage, setTotalPage] = useState<number>(0);
     const [data, setData] = useState<TableData[]>([]);
     const [keyword, setKeyword] = useState<string>('');
+    const [searchParam, setSearchParam] = useState<any>({});
 
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
     React.useImperativeHandle(ref, () => ({
       reload() {
-        handlefetchData(pageSize, currentPage);
+        handlefetchData(searchParam, pageSize, currentPage);
       }
     }));
 
@@ -64,11 +65,13 @@ const DataListView: React.ForwardRefExoticComponent<
     };
 
     const onSearch = (value: string) => {
-      let searchParam: any = {};
+      let payload: any = {};
       if (value != '') {
-        searchParam = { keyword: value };
+        payload = { keyword: value };
       }
-      handlefetchData(searchParam, pageSize, currentPage);
+      setSearchParam(payload);
+      setCurrentPage(() => 1);
+      handlefetchData(payload, pageSize, currentPage);
     };
 
     const handlefetchData = async (
@@ -107,7 +110,7 @@ const DataListView: React.ForwardRefExoticComponent<
     };
 
     useEffect(() => {
-      handlefetchData(pageSize, currentPage);
+      handlefetchData(searchParam, pageSize, currentPage);
     }, [pageSize, currentPage]);
 
     return (
