@@ -62,7 +62,7 @@ export default ({
               value: value ? value : ''
             })}
           >
-            <InputNumber style={{ width: '100%' }} />
+            <InputNumber disabled={field.readonly} style={{ width: '100%' }} />
           </Form.Item>
         );
       case 'time':
@@ -76,7 +76,7 @@ export default ({
               value: value ? dayjs(value) : undefined
             })}
           >
-            <TimePicker style={{ width: '100%' }} />
+            <TimePicker disabled={field.readonly} style={{ width: '100%' }} />
           </Form.Item>
         );
       case 'date':
@@ -90,7 +90,7 @@ export default ({
               value: value ? dayjs(value) : undefined
             })}
           >
-            <DatePicker style={{ width: '100%' }} />
+            <DatePicker disabled={field.readonly} style={{ width: '100%' }} />
           </Form.Item>
         );
       case 'datetime':
@@ -104,7 +104,11 @@ export default ({
               value: value ? dayjs(value) : undefined
             })}
           >
-            <DatePicker showTime style={{ width: '100%' }} />
+            <DatePicker
+              disabled={field.readonly}
+              showTime
+              style={{ width: '100%' }}
+            />
           </Form.Item>
         );
       case 'email':
@@ -118,7 +122,7 @@ export default ({
               value: value ? value : ''
             })}
           >
-            <Input type="email" />
+            <Input disabled={field.readonly} type="email" />
           </Form.Item>
         );
       case 'boolean':
@@ -133,7 +137,7 @@ export default ({
               value: value ? value : ''
             })}
           >
-            <Input type="checkbox" />
+            <Input disabled={field.readonly} type="checkbox" />
           </Form.Item>
         );
       default:
@@ -147,7 +151,7 @@ export default ({
               value: value ? value : ''
             })}
           >
-            <Input />
+            <Input disabled={field.readonly} />
           </Form.Item>
         );
     }
@@ -158,7 +162,7 @@ export default ({
     try {
       // Format date fields to yyyy-MM-dd format
       const formattedValues = { ...values };
-      console.log('1');
+
       for (const [key, value] of Object.entries(formattedValues)) {
         if (value && typeof value === 'object' && value !== null) {
           // Check if it's a moment object (Ant Design DatePicker)
@@ -194,7 +198,6 @@ export default ({
   };
 
   const handleAddNew = () => {
-    console.log(`add new`);
     form.resetFields();
     form.setFieldsValue(null);
     setDataAction('add');

@@ -2,33 +2,9 @@ import { AxiosResponseHeaders } from 'axios';
 import { getStorageItem } from './Storage';
 import { IUser } from '@/model/model';
 
-// const stripUUID = (uuid: string) => {
-//   return uuid.replaceAll('-', '');
-// };
-
-// const debounce = (fn: any, duration = 300) => {
-//   let timeId: any;
-//   return (...args: any[]) => {
-//     clearTimeout(timeId);
-//     // console.log(`clearTimeout ${timeId}`);
-//     timeId = setTimeout(() => {
-//       fn(...args);
-//     }, duration);
-//     // console.log(`new timeId ${timeId}`);
-//   };
-// };
-
-// function throttle(fn: () => void, wait: number) {
-//   let lastTime: any = null;
-//   return function () {
-//     const args = arguments;
-//     const now = Date.now();
-//     if (lastTime === null || now - lastTime > wait) {
-//       lastTime = now;
-//       return fn();
-//     }
-//   };
-// }
+const stripUUID = (uuid: string) => {
+  return uuid.replaceAll('-', '');
+};
 
 enum UIDeviceType {
   PC,
@@ -51,14 +27,14 @@ const mapLanguage = (lang: string) => {
   }
 };
 
-// const random = function (n: number) {
-//   const str = 'abcdefghijklmnopqrstuvwxyz0123456789';
-//   let result = '';
-//   for (let i = 0; i < n; i++) {
-//     result += str[parseInt(Math.random() * str.length + '')];
-//   }
-//   return result;
-// };
+const random = function (n: number) {
+  const str = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  for (let i = 0; i < n; i++) {
+    result += str[parseInt(Math.random() * str.length + '')];
+  }
+  return result;
+};
 
 const getUser = (): IUser | null => {
   let userValue = getStorageItem('user') || '{}';
@@ -119,8 +95,6 @@ const openNotificationWithIcon = (
   message: string,
   err: any
 ) => {
-  console.log(`response type ${err}`);
-  console.log(`response type ${typeof err}`);
   var errMsg = '';
   if (err == undefined) {
     errMsg = '';
@@ -135,7 +109,7 @@ const openNotificationWithIcon = (
   api[type]({
     message: message,
     description: errMsg,
-    duration: 2
+    duration: 1
   });
 };
 
@@ -144,14 +118,12 @@ const isAuthenticated = () => {
 };
 
 export {
-  // stripUUID,
-  // debounce,
+  stripUUID,
   isMobileUi,
   userDevice,
   UIDeviceType,
   mapLanguage,
-  // random,
-  // throttle,
+  random,
   getUser,
   formatDate,
   downloadFile,

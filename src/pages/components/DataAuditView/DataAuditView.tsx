@@ -11,12 +11,9 @@ export default ({
   open: boolean;
   handleOk: () => void;
 }) => {
-  console.log(`Filtered Data: ${JSON.stringify(filteredData)}`);
-  console.log(`Columns: ${JSON.stringify(columns)}`);
-
-  if (filteredData.length === 0) {
-    return <div className="no-data">No data available</div>;
-  }
+  // if (filteredData.length === 0) {
+  //   return <div className="no-data">No data available</div>;
+  // }
 
   return (
     <Modal

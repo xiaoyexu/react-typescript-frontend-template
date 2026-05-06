@@ -7,7 +7,6 @@ const getStorageItem = (key: string): string | null => {
 };
 
 const clearStorageItem = (key: string) => {
-  console.log(`clearStorageItem('${key}')`);
   window.sessionStorage.removeItem(key);
 };
 
