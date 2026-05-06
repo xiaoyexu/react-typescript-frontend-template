@@ -30,18 +30,12 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
 
   const handleLoginOk = (user: IUser) => {
-    console.log(`handleLoginOk user=> ${user}`);
-    // setUser(user);
-    // setIsModalOpen(false);
-    // handleValidLoginChange(true);
     setStorageItem('user', JSON.stringify(user));
     navigate('/');
   };
 
   const handleLoginError = (err: any) => {
-    console.log(`handleLoginError`);
-    // setUser(null);
-    // handleValidLoginChange(false);
+    setError('Invalid username or password');
     clearStorageItem('user');
   };
 
@@ -76,7 +70,6 @@ const Login: React.FC = () => {
         handleLoginOk(user);
       })
       .catch((err: any) => {
-        console.log(`got error ${err}`);
         handleLoginError(err);
       })
       .finally(() => {
@@ -101,6 +94,8 @@ const Login: React.FC = () => {
             label={t('password')}
             name="password"
             rules={[{ required: true, message: 'Please input your password!' }]}
+            hasFeedback
+            validateStatus={error ? 'error' : ''}
           >
             <Input.Password />
           </Form.Item>
