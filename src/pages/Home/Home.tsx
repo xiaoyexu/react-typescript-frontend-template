@@ -64,12 +64,13 @@ const Home: React.FC = () => {
       .then((res) => {
         setAuditData(() => res.data?.data);
       })
-      .catch((err) => {
+      .catch((error) => {
+        const message = error.response.data.status.message;
         openNotificationWithIcon(
           api,
           'error',
           'Error',
-          t('errorFetchingAuditData')
+          t('errorFetchingAuditData', { error: message })
         );
       })
       .finally(() => {
@@ -122,12 +123,13 @@ const Home: React.FC = () => {
         // await fetchData();
         dataListViewRef.current?.reload();
       })
-      .catch((_) => {
+      .catch((error) => {
+        const message = error.response.data.status.message;
         openNotificationWithIcon(
           api,
           'error',
           'Error',
-          t('errorAddingNewItem')
+          t('errorAddingNewItem', { error: message })
         );
       });
   };
@@ -167,12 +169,13 @@ const Home: React.FC = () => {
         // Refetch data to update the UI
         dataListViewRef.current?.reload();
       })
-      .catch((_) => {
+      .catch((error) => {
+        const message = error.response.data.status.message;
         openNotificationWithIcon(
           api,
           'error',
           'Error',
-          t('errorUpdatingRecord')
+          t('errorUpdatingRecord', { error: message })
         );
       });
   };
@@ -210,12 +213,13 @@ const Home: React.FC = () => {
         // Refetch data to update the UI
         dataListViewRef.current?.reload();
       })
-      .catch((_) => {
+      .catch((error) => {
+        const message = error.response.data.status.message;
         openNotificationWithIcon(
           api,
           'error',
           'Error',
-          t('errorDeletingRecord')
+          t('errorDeletingRecord', { error: message })
         );
       });
   };
@@ -264,7 +268,13 @@ const Home: React.FC = () => {
         openNotificationWithIcon(api, 'info', 'Info', 'Imported');
       })
       .catch((error) => {
-        openNotificationWithIcon(api, 'error', 'Error', error.message);
+        const message = error.response.data.status.message;
+        openNotificationWithIcon(
+          api,
+          'error',
+          'Error',
+          t('errorImportingData', { error: message })
+        );
       });
   };
 
