@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Form,
   Input,
@@ -6,10 +7,12 @@ import {
   DatePicker,
   TimePicker,
   Button,
+  Select,
   Space,
   Flex
 } from 'antd';
 import dayjs from 'dayjs';
+import { ColumnConfig, SelectOption } from '@/service/TableConfig';
 
 import type { FormProps } from 'antd';
 
@@ -26,6 +29,7 @@ export default ({
   handleDataChange: (action: DataAction, data: any) => Promise<void>;
   handleShowAudit: (id: string) => void;
 }) => {
+  const [t] = useTranslation();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState<boolean>(false);
   const [dataAction, setDataAction] = useState<DataAction>('view');
@@ -38,7 +42,7 @@ export default ({
     form.setFieldsValue({ ...data });
   }
 
-  const renderFormField = (field: any) => {
+  const renderFormField = (field: ColumnConfig) => {
     const getRules = () => {
       const rules: any[] = [];
       if (field.required) {
@@ -140,6 +144,27 @@ export default ({
             <Input disabled={field.readonly} type="checkbox" />
           </Form.Item>
         );
+      case 'single_select':
+        return (
+          <Form.Item
+            key={field.key}
+            name={field.key}
+            label={field.title}
+            valuePropName="checked"
+            rules={getRules()}
+            getValueProps={(value) => ({
+              value: value ? value : ''
+            })}
+          >
+            <Select
+              disabled={field.readonly}
+              options={field.options?.map((opt: SelectOption) => {
+                return { label: t(opt.key), value: opt.value };
+              })}
+            />
+          </Form.Item>
+        );
+
       default:
         return (
           <Form.Item

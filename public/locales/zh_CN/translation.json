@@ -1,3 +1,6 @@
 {
-  "errorAddingNewItem": "添加新项目时出错 {{error}}"
+  "errorAddingNewItem": "添加新项目时出错 {{error}}",
+  "a1": "使用 A1",
+  "a2": "使用 A2",
+  "a3": "使用 A3"
 }

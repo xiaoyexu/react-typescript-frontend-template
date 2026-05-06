@@ -1,3 +1,6 @@
 {
-  "errorAddingNewItem": "Error adding new item {{error}}"
+  "errorAddingNewItem": "Error adding new item {{error}}",
+  "a1": "Use A1",
+  "a2": "Use A2",
+  "a3": "Use A3"
 }

@@ -7,15 +7,33 @@ type TableConfig = {
 };
 
 type ColumnConfig = {
+  label?: string;
   title: string;
   dataIndex: string;
   key: string;
-  type: 'text' | 'number' | 'date' | 'datetime';
+  type:
+    | 'text'
+    | 'email'
+    | 'boolean'
+    | 'number'
+    | 'date'
+    | 'datetime'
+    | 'time'
+    | 'single_select';
   width: number;
+  required?: boolean;
+  options?: SelectOptions;
   readonly?: boolean;
   fixed?: string;
   className?: string;
 };
+
+type SelectOption = {
+  key: string;
+  value: string;
+};
+
+type SelectOptions = SelectOption[];
 
 type ColumnConfigs = ColumnConfig[];
 
@@ -49,7 +67,12 @@ const TABLE_CONFIG_MAP: Record<string, TableConfig> = {
         title: 'Age',
         dataIndex: 'age',
         key: 'age',
-        type: 'number',
+        type: 'single_select',
+        options: [
+          { key: 'a1', value: '1' },
+          { key: 'a2', value: '2' },
+          { key: 'a3', value: '3' }
+        ],
         width: 200
       },
       {
@@ -152,4 +175,11 @@ const getTables = (name?: string) => {
 
 export default TABLE_CONFIG_MAP;
 export { getTableFields, getTables };
-export type { TableConfig, ColumnConfig, ColumnConfigs, TableData };
+export type {
+  TableConfig,
+  ColumnConfig,
+  ColumnConfigs,
+  SelectOption,
+  SelectOptions,
+  TableData
+};
