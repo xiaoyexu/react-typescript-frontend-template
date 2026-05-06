@@ -3,6 +3,8 @@ import { Input, Flex, Table, Pagination } from 'antd';
 import { searchStudents } from '@/api/modules/Students';
 import { TableData } from '@/service/TableConfig';
 
+import './styles.scss';
+
 const { Search } = Input;
 
 export interface DataListViewProps {
@@ -16,14 +18,6 @@ export interface DataListViewProps {
 export type DataListViewRef = {
   reload: () => void;
 };
-
-// export default ({
-//   tableName,
-//   defaultPageSize = 10,
-//   columns,
-//   selectedItem,
-//   handleItemSelect
-// }: DataListViewProps) => {
 
 const DataListView: React.ForwardRefExoticComponent<
   DataListViewProps & React.RefAttributes<DataListViewRef>

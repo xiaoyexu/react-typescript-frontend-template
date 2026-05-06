@@ -13,6 +13,8 @@ type ColumnConfig = {
   type: 'text' | 'number' | 'date' | 'datetime';
   width: number;
   readonly?: boolean;
+  fixed?: string;
+  className?: string;
 };
 
 type ColumnConfigs = ColumnConfig[];
@@ -25,13 +27,23 @@ const TABLE_CONFIG_MAP: Record<string, TableConfig> = {
     name: 'Students',
     icon: '👤',
     columns: [
-      { title: 'ID', dataIndex: 'id', key: 'id', type: 'text', width: 220 },
+      {
+        title: 'ID',
+        dataIndex: 'id',
+        key: 'id',
+        type: 'text',
+        width: 220,
+        fixed: 'start',
+        className: 'fixed-column '
+      },
       {
         title: 'Name',
         dataIndex: 'name',
         key: 'name',
         type: 'text',
-        width: 150
+        width: 150,
+        fixed: 'start',
+        className: 'fixed-column'
       },
       {
         title: 'Age',
@@ -123,12 +135,19 @@ const getTableFields = (tableName: string, isAudit?: boolean) => {
   ];
 };
 
-const getTables = () => {
-  return Object.values(TABLE_CONFIG_MAP).map((config) => ({
+const getTables = (name?: string) => {
+  let result = Object.values(TABLE_CONFIG_MAP).map((config) => ({
     id: config.id,
     name: config.name,
     icon: config.icon
   }));
+  if (name) {
+    result = result.filter(
+      (table) =>
+        table.name.toLocaleLowerCase().indexOf(name.toLocaleLowerCase()) > 0
+    );
+  }
+  return result;
 };
 
 export default TABLE_CONFIG_MAP;

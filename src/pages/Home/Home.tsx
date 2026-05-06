@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Button, Upload, Flex, Modal, notification } from 'antd';
+import { Button, Upload, Input, Flex, Modal, notification } from 'antd';
 import type { UploadRequestOption } from '@rc-component/upload/lib/interface';
 import { IEntity } from '@/model/model';
 import { DataAction } from '../components/DataDetailView';
@@ -26,6 +26,7 @@ import {
   transformResponse,
   openNotificationWithIcon
 } from '@/service/Utils';
+
 import { getTables, getTableFields, TableData } from '@/service/TableConfig';
 
 const Home: React.FC = () => {
@@ -45,7 +46,7 @@ const Home: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
 
   // Available tables
-  const availableTables = getTables();
+  const [availableTables, setAvailableTables] = useState(getTables());
 
   const fetchAuditData = async (id: string) => {
     setLoading(true);
@@ -92,6 +93,7 @@ const Home: React.FC = () => {
   // Handle search
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
+    setAvailableTables(getTables(e.target.value));
   };
 
   // Handle adding a new item via the modal
@@ -345,11 +347,12 @@ const Home: React.FC = () => {
       <div className="admin-content">
         <div className="sidebar">
           <div className="search-box">
-            <input
-              type="text"
+            <Input
               placeholder="Search tables..."
+              size="large"
               value={searchTerm}
               onChange={handleSearch}
+              allowClear
             />
           </div>
           <nav className="table-list">

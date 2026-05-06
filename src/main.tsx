@@ -7,7 +7,7 @@ import './index.scss';
 const root = createRoot(document.getElementById('root') as HTMLElement);
 
 root.render(
-  <BrowserRouter basename="/admin">
+  <BrowserRouter basename="/admin/">
     {userDevice == UIDeviceType.Mobile ? <App /> : <App />}
   </BrowserRouter>
 );
