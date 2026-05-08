@@ -1,13 +1,14 @@
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { userDevice, UIDeviceType } from '@/service/Utils';
-import App from './App.tsx';
+import WebApp from './app/web';
+import MobileApp from './app/mobile';
 import './index.scss';
 
 const root = createRoot(document.getElementById('root') as HTMLElement);
 
 root.render(
   <BrowserRouter basename="/admin/">
-    {userDevice == UIDeviceType.Mobile ? <App /> : <App />}
+    {userDevice == UIDeviceType.Mobile ? <MobileApp /> : <WebApp />}
   </BrowserRouter>
 );

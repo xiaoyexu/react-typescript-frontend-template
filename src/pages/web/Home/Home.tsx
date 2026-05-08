@@ -4,30 +4,22 @@ import { useTranslation } from 'react-i18next';
 import { Button, Upload, Input, Flex, Modal, notification } from 'antd';
 import type { UploadRequestOption } from '@rc-component/upload/lib/interface';
 import { IEntity } from '@/model/model';
-import { DataAction } from '../components/DataDetailView';
+import { DataAction } from '@/components/DataDetailView';
+import ResizeableView from '@/components/ResizableView/ResizableView';
+import DataListView, { DataListViewRef } from '@/components/DataListView';
+import DataDetailView from '@/components/DataDetailView';
+import DataAuditView from '@/components/DataAuditView';
+import { DownloadFile, downloadFile, transformResponse } from '@/service/Utils';
+import {
+  getTables,
+  getTableFields,
+  TableData,
+  getTableConfig,
+  TableConfig
+} from '@/service/TableConfig';
+import notify from '@/service/Notification';
+
 import './styles.scss';
-
-import {
-  createSingleStudent,
-  updateSingleStudent,
-  deleteSingleStudent,
-  importStudents,
-  exportStudents
-} from '@/api/modules/Students';
-import { searchStudentAudits } from '@/api/modules/StudentAudits';
-
-import ResizeableView from '../components/ResizableView/ResizableView';
-import DataListView, { DataListViewRef } from '../components/DataListView';
-import DataDetailView from '../components/DataDetailView';
-import DataAuditView from '../components/DataAuditView';
-import {
-  DownloadFile,
-  downloadFile,
-  transformResponse,
-  openNotificationWithIcon
-} from '@/service/Utils';
-
-import { getTables, getTableFields, TableData } from '@/service/TableConfig';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -35,31 +27,27 @@ const Home: React.FC = () => {
 
   const [api, contextHolder] = notification.useNotification();
   const [activeTable, setActiveTable] = useState<string>('students');
-  const [auditData, setAuditData] = useState<TableData[]>([]);
-  const [showAuditModal, setShowAuditModal] = useState<boolean>(false);
 
+  const [data, setData] = useState<TableData[]>([]);
+  const [totalCount, setTotalCount] = useState<number>(0);
+  const [auditData, setAuditData] = useState<TableData[]>([]);
+
+  const [showAuditModal, setShowAuditModal] = useState<boolean>(false);
   const dataListViewRef = useRef<DataListViewRef>(null);
 
   const [selectedItem, setSelectedItem] = useState<TableData | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>('');
 
-  // Available tables
   const [availableTables, setAvailableTables] = useState(getTables());
 
-  const fetchAuditData = async (id: string) => {
+  const fetchAuditData = async (tableConfig: TableConfig, id: string) => {
     setLoading(true);
-    setError(null);
-    let result: Promise<any>;
 
-    switch (activeTable) {
-      case 'students':
-        result = searchStudentAudits({ ids: [id] }, { limit: 1000, offset: 0 });
-        break;
-      default:
-        throw new Error('Unknown table');
-    }
+    let result = tableConfig.proxy.searchAudits(
+      { ids: [id] },
+      { limit: 1000, offset: 0 }
+    );
 
     result
       .then((res) => {
@@ -67,11 +55,52 @@ const Home: React.FC = () => {
       })
       .catch((error) => {
         const message = error.response.data.status.message;
-        openNotificationWithIcon(
+        error(api, t('Error'), t('errorFetchingAuditData', { error: message }));
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  const handleTableSelect = (tableId: string) => {
+    setActiveTable(tableId);
+    setSelectedItem(null);
+  };
+
+  const handleItemSelect = (item: TableData) => {
+    setSelectedItem(item);
+  };
+
+  const handleTableNameSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    setAvailableTables(getTables(e.target.value));
+  };
+
+  const handleFetchData = async (
+    request: any,
+    limit?: number,
+    offset?: number,
+    sortBy?: string
+  ) => {
+    const tableConfig = getTableConfig(activeTable);
+    setLoading(true);
+
+    let searchResult: Promise<any> = tableConfig.proxy.search(request, {
+      limit,
+      offset,
+      sortBy
+    });
+
+    searchResult
+      .then((res) => {
+        setData(res.data?.data || []);
+        setTotalCount(res.data?.total || 0);
+      })
+      .catch((error) => {
+        error(
           api,
-          'error',
-          'Error',
-          t('errorFetchingAuditData', { error: message })
+          t('Error'),
+          t('errorFetchingData', { error: error.message })
         );
       })
       .finally(() => {
@@ -79,172 +108,99 @@ const Home: React.FC = () => {
       });
   };
 
-  // Handle table selection
-  const handleTableSelect = (tableId: string) => {
-    setActiveTable(tableId);
-    setSelectedItem(null);
-  };
-
-  // Handle item selection
-  const handleItemSelect = (item: TableData) => {
-    setSelectedItem(item);
-  };
-
-  // Handle search
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-    setAvailableTables(getTables(e.target.value));
-  };
-
-  // Handle adding a new item via the modal
-  const handleAddNewItem = async (newItemData: any) => {
-    let newItemResult: Promise<any>;
-
-    // Call the appropriate create API function based on table type
-    switch (activeTable) {
-      case 'students':
-        newItemResult = createSingleStudent(newItemData);
-        break;
-
-      default:
-        throw new Error('Unknown table for creation');
-    }
+  const handleAddNewItem = async (
+    tableConfig: TableConfig,
+    newItemData: any
+  ) => {
+    let newItemResult: Promise<any> = tableConfig.proxy.create(newItemData);
 
     newItemResult
       .then((newItem: any) => {
-        // Show success message
-        openNotificationWithIcon(
+        notify.success(
           api,
-          'success',
-          'Success',
+          t('Success'),
           `Successfully created new ${activeTable} item`
         );
         setSelectedItem(newItem.data);
-
-        // Refetch data to update the UI
-        // await fetchData();
         dataListViewRef.current?.reload();
       })
       .catch((error) => {
-        const message = error.response.data.status.message;
-        openNotificationWithIcon(
-          api,
-          'error',
-          'Error',
-          t('errorAddingNewItem', { error: message })
-        );
+        notify.error(api, t('Error'), t('errorAddingNewItem', error));
       });
   };
 
-  // Handle editing an item via the modal
-  const handleUpdateItem = async (editedData: any) => {
-    // Ensure selectedItem and its id exist
+  const handleUpdateItem = async (
+    tableConfig: TableConfig,
+    editedData: any
+  ) => {
     if (!selectedItem || !selectedItem.id) {
-      openNotificationWithIcon(api, 'error', 'Error', t('noRecordSelected'));
+      notify.error(api, t('Error'), t('noRecordSelected'));
       return;
     }
 
-    let updatedResult: Promise<any>;
-
-    // Call the appropriate update API function based on table type
-    switch (activeTable) {
-      case 'students':
-        updatedResult = updateSingleStudent(selectedItem.id, editedData);
-        break;
-      default:
-        throw new Error('Unknown table for update');
-    }
+    let updatedResult: Promise<any> = tableConfig.proxy.update(
+      selectedItem.id,
+      editedData
+    );
 
     updatedResult
       .then((updatedItem: any) => {
-        // Show success message
-        openNotificationWithIcon(
+        notify.success(
           api,
-          'success',
-          'Success',
+          t('Success'),
           `Successfully updated ${activeTable} item`
         );
 
-        // Clear selection
         setSelectedItem(updatedItem.data);
-
-        // Refetch data to update the UI
         dataListViewRef.current?.reload();
       })
       .catch((error) => {
-        const message = error.response.data.status.message;
-        openNotificationWithIcon(
-          api,
-          'error',
-          'Error',
-          t('errorUpdatingRecord', { error: message })
-        );
+        error(api, t('Error'), t('errorUpdatingRecord', error));
       });
   };
 
-  // Handle delete action
-  const handleDeleteItem = async () => {
+  const handleDeleteItem = async (tableConfig: TableConfig) => {
     if (!selectedItem) {
-      openNotificationWithIcon(api, 'error', 'Error', t('noRecordSelected'));
+      notify.error(api, 'Error', t('noRecordSelected'));
       return;
     }
 
-    // Call the appropriate delete API function based on table type
-    let deleteResult: Promise<any>;
-
-    switch (activeTable) {
-      case 'students':
-        deleteResult = deleteSingleStudent((selectedItem as IEntity).id);
-        break;
-      default:
-        throw new Error('Unknown table for deletion');
-    }
+    let deleteResult: Promise<any> = tableConfig.proxy.delete(
+      (selectedItem as IEntity).id
+    );
 
     deleteResult
       .then(() => {
-        // Show success message
-        openNotificationWithIcon(
+        notify.success(
           api,
-          'success',
-          'Success',
+          t('Success'),
           `Successfully deleted ${activeTable} item with ID: ${selectedItem.id}`
         );
 
-        // Clear selection
         setSelectedItem(null);
-        // Refetch data to update the UI
         dataListViewRef.current?.reload();
       })
       .catch((error) => {
-        const message = error.response.data.status.message;
-        openNotificationWithIcon(
-          api,
-          'error',
-          'Error',
-          t('errorDeletingRecord', { error: message })
-        );
+        notify.error(api, t('Error'), t('errorDeletingRecord', error));
       });
   };
 
   const handleExport = async () => {
     if (!activeTable) return;
 
-    switch (activeTable) {
-      case 'students':
-        exportStudents(
-          {},
-          { limit: 1000, offset: 1 },
-          {
-            responseType: 'blob',
-            transformResponse: [transformResponse]
-          }
-        ).then((file: any) => {
-          downloadFile(file as unknown as DownloadFile);
-        });
-        break;
-      default:
-        throw new Error('Unknown table for deletion');
-    }
+    const tableConfig = getTableConfig(activeTable);
+    tableConfig.proxy
+      .export(
+        searchTerm,
+        { limit: 1000, offset: 1 },
+        {
+          responseType: 'blob',
+          transformResponse: [transformResponse]
+        }
+      )
+      .then((file: any) => {
+        downloadFile(file as unknown as DownloadFile);
+      });
   };
 
   const handleImport = async (
@@ -252,40 +208,25 @@ const Home: React.FC = () => {
     _: { defaultRequest: (option: UploadRequestOption) => void }
   ) => {
     if (!activeTable) return;
+
+    const tableConfig = getTableConfig(activeTable);
+
     const formData = new FormData();
     formData.append('file', options.file);
 
-    let importFunction: Promise<any>;
+    let importFunc: Promise<any> = tableConfig.proxy.import(formData);
 
-    switch (activeTable) {
-      case 'students':
-        importFunction = importStudents(formData);
-        break;
-      default:
-        return Promise.reject(new Error('Unknown table for import'));
-    }
-
-    return importFunction
+    return importFunc
       .then((res) => {
-        openNotificationWithIcon(api, 'info', 'Info', 'Imported');
+        notify.info(api, 'Info', 'Imported');
       })
       .catch((error) => {
-        const message = error.response.data.status.message;
-        openNotificationWithIcon(
-          api,
-          'error',
-          'Error',
-          t('errorImportingData', { error: message })
-        );
+        notify.error(api, t('Error'), t('errorImportingData', error));
       });
   };
 
-  // Handle logout
   const handleLogout = () => {
-    // Remove user from session storage
     sessionStorage.removeItem('user');
-
-    // Redirect to login page
     navigate('/login');
   };
 
@@ -302,17 +243,20 @@ const Home: React.FC = () => {
   };
 
   const handleShowAudit = (id: string) => {
-    fetchAuditData(id);
+    const tableConfig = getTableConfig(activeTable);
+    fetchAuditData(tableConfig, id);
     setShowAuditModal(true);
   };
 
   const handleDataChange = async (action: DataAction, data: any) => {
+    const tableConfig: TableConfig = getTableConfig(activeTable);
+
     switch (action) {
       case 'add':
-        handleAddNewItem(data);
+        handleAddNewItem(tableConfig, data);
         break;
       case 'edit':
-        handleUpdateItem(data);
+        handleUpdateItem(tableConfig, data);
         break;
       case 'delete':
         Modal.confirm({
@@ -320,7 +264,7 @@ const Home: React.FC = () => {
           content: t('deleteRecordContent'),
           cancelText: t('cancel'),
           onOk: () => {
-            handleDeleteItem();
+            handleDeleteItem(tableConfig);
           }
         });
         break;
@@ -351,7 +295,7 @@ const Home: React.FC = () => {
               placeholder="Search tables..."
               size="large"
               value={searchTerm}
-              onChange={handleSearch}
+              onChange={handleTableNameSearch}
               allowClear
             />
           </div>
@@ -396,8 +340,11 @@ const Home: React.FC = () => {
                 ref={dataListViewRef}
                 tableName={activeTable}
                 defaultPageSize={10}
+                totalCount={totalCount}
                 columns={getTableFieldsForList()}
+                data={data}
                 selectedItem={selectedItem}
+                handleFetchData={handleFetchData}
                 handleItemSelect={handleItemSelect}
               />
             }

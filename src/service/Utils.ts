@@ -87,32 +87,6 @@ const transformResponse = (data: Blob, headers: AxiosResponseHeaders) => {
   return { data: data, name: name };
 };
 
-type NotificationType = 'success' | 'info' | 'warning' | 'error';
-
-const openNotificationWithIcon = (
-  api: any,
-  type: NotificationType,
-  message: string,
-  err: any
-) => {
-  var errMsg = '';
-  if (err == undefined) {
-    errMsg = '';
-  } else if (typeof err === 'string') {
-    errMsg = err;
-  } else if (err.message) {
-    errMsg = err.message;
-  } else if (err.response) {
-    errMsg = err.response.data?.code?.description;
-  }
-
-  api[type]({
-    message: message,
-    description: errMsg,
-    duration: 1
-  });
-};
-
 const isAuthenticated = () => {
   return getStorageItem('user') !== null;
 };
@@ -128,8 +102,7 @@ export {
   formatDate,
   downloadFile,
   transformResponse,
-  openNotificationWithIcon,
   isAuthenticated
 };
 
-export type { DownloadFile, NotificationType };
+export type { DownloadFile };

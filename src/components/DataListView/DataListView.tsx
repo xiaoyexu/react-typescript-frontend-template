@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Input, Flex, Table, Pagination } from 'antd';
-import { searchStudents } from '@/api/modules/Students';
+import { Input, Flex, Table, Pagination, Select } from 'antd';
 import { TableData } from '@/service/TableConfig';
 
 import './styles.scss';
@@ -10,8 +9,16 @@ const { Search } = Input;
 export interface DataListViewProps {
   tableName: string;
   defaultPageSize?: number;
+  totalCount: number;
   columns: any[];
+  data: TableData[];
   selectedItem: TableData | null;
+  handleFetchData: (
+    request: any,
+    limit?: number,
+    offset?: number,
+    sortBy?: string
+  ) => void;
   handleItemSelect: (item: TableData) => void;
 }
 
@@ -27,35 +34,23 @@ const DataListView: React.ForwardRefExoticComponent<
     const [pageSize, setPageSize] = useState<number>(
       props.defaultPageSize || 10
     );
-    const [totalPage, setTotalPage] = useState<number>(0);
-    const [data, setData] = useState<TableData[]>([]);
+    // const [totalPage, setTotalPage] = useState<number>(0);
     const [keyword, setKeyword] = useState<string>('');
     const [searchParam, setSearchParam] = useState<any>({});
 
-    const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string | null>(null);
-
     React.useImperativeHandle(ref, () => ({
       reload() {
-        handlefetchData(searchParam, pageSize, currentPage);
+        props.handleFetchData(searchParam, pageSize, currentPage);
       }
     }));
-
-    // if (loading) {
-    //   return <div className="loading">Loading...</div>;
-    // }
-
-    // if (error) {
-    //   return <div className="error">{error}</div>;
-    // }
-
-    // if (filteredData.length === 0) {
-    //   return <div className="no-data">No data available</div>;
-    // }
 
     const onPaginationChange = (page: number, pageSize: number) => {
       setCurrentPage(page);
       setPageSize(pageSize);
+    };
+
+    const onPageSizeChange = (value: number) => {
+      setPageSize(value);
     };
 
     const onSearch = (value: string) => {
@@ -65,46 +60,11 @@ const DataListView: React.ForwardRefExoticComponent<
       }
       setSearchParam(payload);
       setCurrentPage(() => 1);
-      handlefetchData(payload, pageSize, currentPage);
-    };
-
-    const handlefetchData = async (
-      request: any,
-      limit?: number,
-      offset?: number,
-      sortBy?: string
-    ) => {
-      setLoading(true);
-      setError(null);
-
-      try {
-        let result: any;
-
-        switch (props.tableName) {
-          case 'students':
-            result = await searchStudents(request, { limit, offset, sortBy });
-            break;
-          default:
-            throw new Error('Unknown table');
-        }
-
-        // Assuming the API returns data in a standard format
-        if (result && result.data) {
-          setData(result.data?.data || result.data || []);
-          setTotalPage(result.data?.total || 0);
-        } else {
-          setError('Invalid API response format');
-        }
-      } catch (err) {
-        setError('An error occurred while fetching data');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
+      props.handleFetchData(payload, pageSize, currentPage);
     };
 
     useEffect(() => {
-      handlefetchData(searchParam, pageSize, currentPage);
+      props.handleFetchData(searchParam, pageSize, currentPage);
     }, [pageSize, currentPage]);
 
     return (
@@ -121,7 +81,7 @@ const DataListView: React.ForwardRefExoticComponent<
           />
           <Table
             className="h-full"
-            dataSource={data}
+            dataSource={props.data}
             columns={props.columns}
             rowKey="id"
             onRow={(record) => ({
@@ -135,13 +95,31 @@ const DataListView: React.ForwardRefExoticComponent<
             pagination={false}
             scroll={{ y: 'calc(100vh)' }}
           />
-          <Flex justify="center">
-            <Pagination
-              defaultCurrent={currentPage}
-              total={totalPage}
-              pageSize={pageSize}
-              onChange={onPaginationChange}
-            />
+          <Flex justify="space-between">
+            <Flex justify="center" align="start">
+              <Pagination
+                defaultCurrent={currentPage}
+                total={props.totalCount}
+                pageSize={pageSize}
+                onChange={onPaginationChange}
+              />
+            </Flex>
+            <Flex align="center" gap={5}>
+              <Flex justify="center">
+                <label>Page Size:</label>
+              </Flex>
+              <Select
+                defaultValue={10}
+                onChange={onPageSizeChange}
+                options={[
+                  { label: '5', value: 5 },
+                  { label: '10', value: 10 },
+                  { label: '20', value: 20 },
+                  { label: '50', value: 50 },
+                  { label: '100', value: 100 }
+                ]}
+              />
+            </Flex>
           </Flex>
         </Flex>
       </div>

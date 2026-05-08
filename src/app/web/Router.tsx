@@ -1,8 +1,8 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { getStorageItem } from './service/Storage';
+import { getStorageItem } from '../../service/Storage';
 
-import Home from './pages/Home';
-import Login from './pages/Login';
+import Home from '../../pages/web/Home';
+import Login from '../../pages/web/Login';
 
 const isAuthenticated = () => {
   return getStorageItem('user') !== null;

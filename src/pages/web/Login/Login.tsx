@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { login } from '../../api/modules/User';
+import { login } from '../../../api/modules/User';
 import { ILoginResponse } from '@/api/types';
 import { IUser, ILogin } from '@/model/model';
 import { jwtDecode } from 'jwt-decode';

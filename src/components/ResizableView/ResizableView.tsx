@@ -4,8 +4,8 @@ export default ({
   leftView,
   rightView
 }: {
-  leftView: React.ReactElement;
-  rightView: React.ReactElement;
+  leftView: React.ReactNode;
+  rightView: React.ReactNode;
 }) => {
   const dataViewRef = useRef<HTMLDivElement>(null);
   const resizableContainerRef = useRef<HTMLDivElement>(null);

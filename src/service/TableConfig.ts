@@ -1,9 +1,30 @@
 import { IStudent } from '@/api/types';
+import {
+  searchStudents,
+  createSingleStudent,
+  updateSingleStudent,
+  deleteSingleStudent,
+  importStudents,
+  exportStudents
+} from '@/api/modules/Students';
+import { searchStudentAudits } from '@/api/modules/StudentAudits';
+
+type ApiProxy = {
+  search(query?: any, pagination?: any, config?: any): Promise<any>;
+  create(data: any): Promise<any>;
+  update(id: any, data: any): Promise<any>;
+  delete(id: any): Promise<any>;
+  import(data: FormData): Promise<any>;
+  export(query?: any, pagination?: any, config?: any): Promise<any>;
+  searchAudits(query?: any, pagination?: any, config?: any): Promise<any>;
+};
+
 type TableConfig = {
   id: string;
   name: string;
-  icon: React.ReactElement | string;
+  icon: React.ReactNode;
   columns: ColumnConfigs;
+  proxy: ApiProxy;
 };
 
 type ColumnConfig = {
@@ -89,8 +110,21 @@ const TABLE_CONFIG_MAP: Record<string, TableConfig> = {
         type: 'date',
         width: 150
       }
-    ]
+    ],
+    proxy: {
+      search: searchStudents,
+      create: createSingleStudent,
+      update: updateSingleStudent,
+      delete: deleteSingleStudent,
+      import: importStudents,
+      export: exportStudents,
+      searchAudits: searchStudentAudits
+    }
   }
+};
+
+const getTableConfig = (tableName: string) => {
+  return TABLE_CONFIG_MAP[tableName];
 };
 
 const getTableFields = (tableName: string, isAudit?: boolean) => {
@@ -174,7 +208,7 @@ const getTables = (name?: string) => {
 };
 
 export default TABLE_CONFIG_MAP;
-export { getTableFields, getTables };
+export { getTableConfig, getTableFields, getTables };
 export type {
   TableConfig,
   ColumnConfig,
