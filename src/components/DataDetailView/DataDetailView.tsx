@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import {
   Form,
   Input,
+  Checkbox,
   InputNumber,
   DatePicker,
   TimePicker,
@@ -145,10 +146,10 @@ const DataDetailView: React.ForwardRefExoticComponent<
               valuePropName="checked"
               rules={getRules()}
               getValueProps={(value) => ({
-                value: value ? value : ''
+                checked: value == '1' ? true : false
               })}
             >
-              <Input disabled={field.readonly} type="checkbox" />
+              <Checkbox />
             </Form.Item>
           );
         case 'single_select':

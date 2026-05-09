@@ -1,6 +1,6 @@
 import { useLayoutEffect } from 'react';
-import { useNavBar } from '@/components/NavBarContext';
 import { Link } from 'react-router-dom';
+import { useNavBar } from '@/components/NavBarContext';
 
 export default () => {
   const { setNavBarConfig } = useNavBar();
