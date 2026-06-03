@@ -15,8 +15,12 @@ interface IUser {
   username: string;
   displayName: string;
   role: string;
-  accessToken: string;
-  refreshToken: string;
 }
 
-export type { IEntity, IUser, ILogin };
+interface TokenPayload {
+  username: string;
+  displayName: string;
+  role: string;
+}
+
+export type { IEntity, IUser, ILogin, TokenPayload };

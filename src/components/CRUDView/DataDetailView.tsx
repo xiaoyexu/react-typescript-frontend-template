@@ -41,7 +41,6 @@ const DataDetailView: React.ForwardRefExoticComponent<
     const [loading, setLoading] = useState<boolean>(false);
     const [dataAction, setDataAction] = useState<DataAction>('view');
 
-    form.resetFields();
     if (dataAction === 'add') {
       form.setFieldsValue(null);
     } else {
@@ -150,7 +149,6 @@ const DataDetailView: React.ForwardRefExoticComponent<
               valuePropName="checked"
               rules={getRules()}
               getValueProps={(value) => {
-                console.log(`boolean value ${value}`);
                 return {
                   checked: value == '1' ? true : false
                 };

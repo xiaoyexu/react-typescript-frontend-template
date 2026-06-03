@@ -40,7 +40,8 @@ type ColumnConfig = {
     | 'date'
     | 'datetime'
     | 'time'
-    | 'single_select';
+    | 'single_select'
+    | 'textarea';
   width: number;
   required?: boolean;
   options?: SelectOptions;
