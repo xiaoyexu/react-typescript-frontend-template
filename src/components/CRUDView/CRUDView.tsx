@@ -1,12 +1,12 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useLayoutEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Button, Upload, Input, Flex, Modal, notification } from 'antd';
 import { IEntity } from '@/model/model';
-import ResizeableView from '@/components/ResizableView/ResizableView';
-import DataListView, { DataListViewRef } from '@/components/DataListView';
-import DataDetailView, { DataAction } from '@/components/DataDetailView';
-import DataAuditView from '@/components/DataAuditView';
+import ResizeableView from '@/components/ResizableView';
+import DataListView, { DataListViewRef } from './DataListView';
+import DataDetailView, { DataAction } from './DataDetailView';
+import DataAuditView from './DataAuditView';
 import { DownloadFile, downloadFile, transformResponse } from '@/service/Utils';
 import {
   getTableFields,
@@ -17,7 +17,7 @@ import {
 import notify from '@/service/Notification';
 
 import type { UploadRequestOption } from '@rc-component/upload/lib/interface';
-import DataSearchView from '../DataSearchView/DataSearchView';
+import DataSearchView from './DataSearchView';
 
 interface TableDataViewProps {
   tableId: string;
@@ -184,7 +184,7 @@ const TableDataView: React.ForwardRefExoticComponent<
           dataListViewRef.current?.reload();
         })
         .catch((error) => {
-          notify.error(api, t('Error'), t('errorAddingNewItem', error));
+          notify.error(api, t('Error'), t('errorAddingNewItem', { error }));
         });
     };
 
@@ -293,11 +293,10 @@ const TableDataView: React.ForwardRefExoticComponent<
       setPageSize(value);
     };
 
-    useEffect(() => {
-      setSelectedItem(() => ({}));
-      dataListViewRef.current?.reload();
-      console.log(`dataListViewRef.current?.reload();`);
-    }, []);
+    useLayoutEffect(() => {
+      // Fetch data when the table ID changes
+      setSelectedItem(null);
+    }, [props.tableId]);
 
     return (
       <>

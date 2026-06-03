@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Input, Flex } from 'antd';
-import TableDataView from '@/components/TableDataView';
+import CRUDView from '@/components/CRUDView';
 import { getTables } from '@/service/TableConfig';
 
 import './styles.scss';
@@ -68,7 +68,7 @@ const Home: React.FC = () => {
           </nav>
         </div>
         <div className="main-content">
-          <TableDataView
+          <CRUDView
             tableId={activeTable}
             tableName={
               availableTables.find((table) => table.id === activeTable)?.name ||

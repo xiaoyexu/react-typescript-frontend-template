@@ -13,14 +13,18 @@ import {
   Flex
 } from 'antd';
 import dayjs from 'dayjs';
-import { ColumnConfig, SelectOption } from '@/service/TableConfig';
+import {
+  ColumnConfig,
+  ColumnConfigs,
+  SelectOption
+} from '@/service/TableConfig';
 
 import type { FormProps } from 'antd';
 
 export type DataAction = 'view' | 'add' | 'edit' | 'delete';
 
 interface DataDetailViewProps {
-  displayColumns: any[];
+  displayColumns: ColumnConfigs;
   data: any;
   handleDataChange: (action: DataAction, data: any) => Promise<void>;
   handleShowAudit: (id: string) => void;
@@ -145,9 +149,12 @@ const DataDetailView: React.ForwardRefExoticComponent<
               label={field.title}
               valuePropName="checked"
               rules={getRules()}
-              getValueProps={(value) => ({
-                checked: value == '1' ? true : false
-              })}
+              getValueProps={(value) => {
+                console.log(`boolean value ${value}`);
+                return {
+                  checked: value == '1' ? true : false
+                };
+              }}
             >
               <Checkbox />
             </Form.Item>
@@ -169,6 +176,24 @@ const DataDetailView: React.ForwardRefExoticComponent<
                 options={field.options?.map((opt: SelectOption) => {
                   return { label: t(opt.key), value: opt.value };
                 })}
+              />
+            </Form.Item>
+          );
+        case 'textarea':
+          return (
+            <Form.Item
+              key={field.key}
+              name={field.key}
+              label={field.title}
+              valuePropName="checked"
+              rules={getRules()}
+              getValueProps={(value) => ({
+                value: value ? value : ''
+              })}
+            >
+              <Input.TextArea
+                style={{ height: '30vh' }}
+                disabled={field.readonly}
               />
             </Form.Item>
           );
@@ -194,11 +219,10 @@ const DataDetailView: React.ForwardRefExoticComponent<
       setLoading(true);
       try {
         const formattedValues = { ...values };
-
         for (const [key, value] of Object.entries(formattedValues)) {
           if (value && typeof value === 'object' && value !== null) {
             if ('format' in value && typeof value.format === 'function') {
-              const field = props.displayColumns.find((f) => f.name === key);
+              const field = props.displayColumns.find((f) => f.key === key);
               if (field && field.type === 'datetime') {
                 formattedValues[key] = value.format(`YYYY-MM-DDTHH:mm:ss`);
               } else if (field && field.type === 'time') {

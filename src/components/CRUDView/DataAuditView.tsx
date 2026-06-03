@@ -20,6 +20,7 @@ const DataAuditView: React.ForwardRefExoticComponent<
         mask={{ closable: true, enabled: true }}
         closable={false}
         footer={[<Button onClick={props.handleOk}>Ok</Button>]}
+        onCancel={props.handleOk}
         width={800}
       >
         <div className="table-container">

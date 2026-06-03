@@ -1,12 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { Input, Flex, Table, Pagination, Select } from 'antd';
+import React, { useLayoutEffect } from 'react';
+import { Flex, Table, Pagination, Select } from 'antd';
 import { TableData } from '@/service/TableConfig';
-
-import './styles.scss';
 
 export interface DataListViewProps {
   tableName: string;
-  // defaultPageSize?: number;
   searchParam: any;
   totalCount: number;
   pageSize: number;
@@ -33,12 +30,6 @@ const DataListView: React.ForwardRefExoticComponent<
   DataListViewProps & React.RefAttributes<DataListViewRef>
 > = React.forwardRef<DataListViewRef, DataListViewProps>(
   (props: DataListViewProps, ref: React.ForwardedRef<DataListViewRef>) => {
-    // const [currentPage, setCurrentPage] = useState<number>(1);
-    // const [pageSize, setPageSize] = useState<number>(
-    //   props.defaultPageSize || 10
-    // );
-    // const [searchParam, setSearchParam] = useState<any>({});
-
     React.useImperativeHandle(ref, () => ({
       reload() {
         props.handleFetchData(
@@ -49,7 +40,7 @@ const DataListView: React.ForwardRefExoticComponent<
       }
     }));
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       props.handleFetchData(
         props.searchParam,
         props.pageSize,
