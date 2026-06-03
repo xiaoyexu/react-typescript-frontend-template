@@ -1,30 +1,30 @@
 /* eslint-disable */
 /* tslint:disable */
 // @ts-nocheck
-import { getStorageItem } from './Storage';
-import { getUser } from './Utils';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import i18n from '@/i18n';
 import qs from 'qs';
+import { getAuth, setAuth } from '@/app/auth/useAuth';
 
 // Base URL for the API
 const API_BASE_URL = '/api/v1';
 
-// // Create axios instance
-// const apiClient = axios.create({
-//   baseURL: API_BASE_URL,
-//   timeout: 10000,
-//   headers: {
-//     'Content-Type': 'application/json',
-//   },
-// });
+const isRefreshToken = (config: any) => {
+  return config.url === `/user/refresh`;
+};
+
+axios.defaults.withCredentials = true;
 
 // Request interceptor to add auth token
 axios.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('authToken');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    const { accessToken } = getAuth();
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+
+    if (isRefreshToken(config)) {
+      config.headers.Authorization = '';
     }
     return config;
   },
@@ -38,11 +38,23 @@ axios.interceptors.response.use(
   (response: AxiosResponse) => {
     return response;
   },
-  (error) => {
-    if (error.response?.status === 401) {
-      // Handle unauthorized access
-      localStorage.removeItem('authToken');
-      window.location.href = '/admin/login';
+  async (error) => {
+    const originalRequest = error.config;
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      const { refreshToken, logout } = getAuth();
+
+      originalRequest._retry = true;
+      try {
+        const newAccessToken = await refreshToken();
+        setAuth({ ...getAuth(), accessToken: newAccessToken });
+
+        originalRequest.headers.Authorization = 'Bearer ' + newAccessToken;
+        originalRequest.headers['X-Trace-Id'] = random(10);
+        return await axios(originalRequest);
+      } catch (err) {
+        console.log(`refresh token failed ${err}`);
+        logout?.();
+      }
     }
     return Promise.reject(error);
   }
@@ -61,7 +73,7 @@ export const setRequestHeaders = (
   headers?: AxiosRequestHeaders,
   needToken?: boolean
 ) => {
-  let user = getUser();
+  const { accessToken } = getAuth();
 
   const defaultHeaders: { [key: string]: string } = {
     'Accept-Language': i18n.language,
@@ -71,8 +83,8 @@ export const setRequestHeaders = (
     'X-lbu': 'hk'
   };
 
-  if (user?.accessToken != null) {
-    defaultHeaders['Authorization'] = `Bearer ${user.accessToken}`;
+  if (accessToken != null) {
+    defaultHeaders['Authorization'] = `Bearer ${accessToken}`;
   }
 
   return {

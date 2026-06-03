@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Input, Flex } from 'antd';
+import { Input, Flex, Select } from 'antd';
 import CRUDView from '@/components/CRUDView';
 import { getTables } from '@/service/TableConfig';
 
-import './styles.scss';
-
 const Home: React.FC = () => {
   const navigate = useNavigate();
-  const [t] = useTranslation();
+  const [t, i18n] = useTranslation();
 
   const [activeTable, setActiveTable] = useState<string>('students');
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -29,6 +27,10 @@ const Home: React.FC = () => {
     setAvailableTables(getTables(e.target.value));
   };
 
+  const handleLanguageChange = (language: string) => {
+    i18n.changeLanguage(language);
+  };
+
   return (
     <div className="admin-dashboard">
       <header className="admin-header">
@@ -36,6 +38,16 @@ const Home: React.FC = () => {
         <div className="user-info">
           <Flex gap={15} justify="center" align="space-between">
             <h2>Admin User</h2>
+            <Select
+              value={i18n.language}
+              onChange={handleLanguageChange}
+              options={[
+                { value: 'zh_CN', label: '中文简体' },
+                { value: 'zh_HK', label: '中文繁體' },
+                { value: 'en_US', label: 'English' }
+              ]}
+              style={{ width: 120 }}
+            />
             <button className="btn btn-secondary" onClick={handleLogout}>
               {t('logout')}
             </button>

@@ -1,16 +1,13 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { getStorageItem } from '../../service/Storage';
-
+import { useAuth } from '../auth/useAuth';
 import Home from '../../pages/web/Home';
 import Login from '../../pages/web/Login';
 
-const isAuthenticated = () => {
-  return getStorageItem('user') !== null;
-};
-
 // Protected route component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  if (isAuthenticated()) {
+  const { isAuthenticated } = useAuth();
+
+  if (isAuthenticated) {
     return <>{children}</>;
   } else {
     return <Navigate to="/login" replace />;

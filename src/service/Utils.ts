@@ -1,6 +1,4 @@
 import { AxiosResponseHeaders } from 'axios';
-import { getStorageItem } from './Storage';
-import { IUser } from '@/model/model';
 
 const stripUUID = (uuid: string) => {
   return uuid.replaceAll('-', '');
@@ -34,16 +32,6 @@ const random = function (n: number) {
     result += str[parseInt(Math.random() * str.length + '')];
   }
   return result;
-};
-
-const getUser = (): IUser | null => {
-  let userValue = getStorageItem('user') || '{}';
-  try {
-    let user: IUser = JSON.parse(userValue);
-    return user;
-  } catch (err) {
-    return null;
-  }
 };
 
 const formatDate = (date: any) =>
@@ -87,10 +75,6 @@ const transformResponse = (data: Blob, headers: AxiosResponseHeaders) => {
   return { data: data, name: name };
 };
 
-const isAuthenticated = () => {
-  return getStorageItem('user') !== null;
-};
-
 export {
   stripUUID,
   isMobileUi,
@@ -98,11 +82,9 @@ export {
   UIDeviceType,
   mapLanguage,
   random,
-  getUser,
   formatDate,
   downloadFile,
-  transformResponse,
-  isAuthenticated
+  transformResponse
 };
 
 export type { DownloadFile };
