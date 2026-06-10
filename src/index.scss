@@ -128,6 +128,23 @@ body {
   overflow-y: auto;
 }
 
+.sidebar.collapsed {
+  width: 80px;
+}
+
+.sidebar.collapsed .table-name {
+  display: none;
+}
+
+.sidebar.collapsed .table-icon {
+  margin-right: 0;
+}
+
+.sidebar.collapsed .table-item {
+  justify-content: center;
+  padding: 1rem 0;
+}
+
 .search-box {
   margin-bottom: 1rem;
 }
