@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Input, Flex, Select, Button } from 'antd';
@@ -13,7 +13,7 @@ const Home: React.FC = () => {
 
   const [activeTable, setActiveTable] = useState<string>('students');
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [availableTables, setAvailableTables] = useState(getTables());
+  const availableTables = useMemo(() => getTables(searchTerm), [searchTerm]);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
 
   const handleTableSelect = (tableId: string) => {
@@ -27,7 +27,6 @@ const Home: React.FC = () => {
 
   const handleTableNameSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
-    setAvailableTables(getTables(e.target.value));
   };
 
   const handleLanguageChange = (language: string) => {

@@ -1,7 +1,7 @@
-import React, { useState, useRef, useLayoutEffect } from 'react';
+import React, { useState, useRef, useLayoutEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Button, Upload, Input, Flex, Modal, notification } from 'antd';
+import { Button, Upload, Input, Flex, Modal, notification, Spin } from 'antd';
 import { IEntity } from '@/model/model';
 import ResizeableView from '@/components/ResizableView';
 import DataListView, { DataListViewRef } from './DataListView';
@@ -18,6 +18,8 @@ import notify from '@/service/Notification';
 
 import type { UploadRequestOption } from '@rc-component/upload/lib/interface';
 import DataSearchView from './DataSearchView';
+/* Import CRUDView styles */
+import './CRUDView.scss';
 
 interface TableDataViewProps {
   tableId: string;
@@ -51,21 +53,27 @@ const TableDataView: React.ForwardRefExoticComponent<
 
     const [showAuditModal, setShowAuditModal] = useState<boolean>(false);
 
-    const tableConfig = getTableConfig(props.tableId);
+    const tableConfig = useMemo(
+      () => getTableConfig(props.tableId),
+      [props.tableId]
+    );
 
     React.useImperativeHandle(ref, () => ({}));
 
-    const getTableFieldsForDetail = () => {
-      return getTableFields(props.tableId);
-    };
+    const tableFieldsForDetail = useMemo(
+      () => getTableFields(props.tableId),
+      [props.tableId]
+    );
 
-    const getTableFieldsForList = () => {
-      return getTableFields(props.tableId);
-    };
+    const tableFieldsForList = useMemo(
+      () => getTableFields(props.tableId),
+      [props.tableId]
+    );
 
-    const getTableFieldsForAuditList = () => {
-      return getTableFields(props.tableId, true);
-    };
+    const tableFieldsForAuditList = useMemo(
+      () => getTableFields(props.tableId, true),
+      [props.tableId]
+    );
 
     const onSearch = (value: string) => {
       let payload: any = {};
@@ -306,7 +314,9 @@ const TableDataView: React.ForwardRefExoticComponent<
       <>
         {contextHolder}
         <div className="content-header">
-          <h2>{props.tableName}</h2>
+          <h2>
+            <strong>{props.tableName}</strong>
+          </h2>
           <Flex justify="right" align="center">
             <div className="content-actions">
               <Flex gap={5} justify="end">
@@ -326,6 +336,7 @@ const TableDataView: React.ForwardRefExoticComponent<
           </Flex>
         </div>
         <ResizeableView
+          showRightView={!!selectedItem}
           leftView={
             <>
               <DataSearchView
@@ -340,7 +351,7 @@ const TableDataView: React.ForwardRefExoticComponent<
                 totalCount={totalCount}
                 pageSize={pageSize}
                 currentPage={currentPage}
-                columns={getTableFieldsForList()}
+                columns={tableFieldsForList}
                 data={data}
                 selectedItem={selectedItem}
                 handleFetchData={handleFetchData}
@@ -353,15 +364,16 @@ const TableDataView: React.ForwardRefExoticComponent<
           rightView={
             <DataDetailView
               tableConfig={tableConfig}
-              displayColumns={getTableFieldsForDetail()}
+              displayColumns={tableFieldsForDetail}
               data={selectedItem}
               handleDataChange={handleDataChange}
               handleShowAudit={handleShowAudit}
+              handleClose={() => setSelectedItem(null)}
             />
           }
         />
         <DataAuditView
-          columns={getTableFieldsForAuditList()}
+          columns={tableFieldsForAuditList}
           filteredData={auditData}
           open={showAuditModal}
           handleOk={() => setShowAuditModal(false)}

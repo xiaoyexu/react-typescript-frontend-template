@@ -3,6 +3,9 @@ import { Flex, Table, Pagination, Select } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { TableData } from '@/service/TableConfig';
 
+/* Import CRUDView styles */
+import './CRUDView.scss';
+
 export interface DataListViewProps {
   tableName: string;
   searchParam: any;
@@ -53,7 +56,7 @@ const DataListView: React.ForwardRefExoticComponent<
 
     return (
       <div className="table-container h-full">
-        <Flex vertical gap={10}>
+        <Flex vertical gap={0} style={{ height: '100%' }}>
           <Table
             className="h-full"
             dataSource={props.data}
@@ -68,21 +71,18 @@ const DataListView: React.ForwardRefExoticComponent<
                 : ''
             }
             pagination={false}
-            scroll={{ y: 'calc(100vh)' }}
+            scroll={{ y: 'calc(100vh - 280px)' }}
           />
-          <Flex justify="space-between">
-            <Flex justify="center" align="start">
-              <Pagination
-                defaultCurrent={props.currentPage}
-                total={props.totalCount}
-                pageSize={props.pageSize}
-                onChange={props.onPaginationChange}
-              />
-            </Flex>
-            <Flex align="center" gap={5}>
-              <Flex justify="center">
-                <label>{t('pageSize')}</label>
-              </Flex>
+          <div className="pagination-container">
+            <Pagination
+              defaultCurrent={props.currentPage}
+              total={props.totalCount}
+              pageSize={props.pageSize}
+              onChange={props.onPaginationChange}
+              showSizeChanger={false}
+            />
+            <div className="page-size-selector">
+              <label>{t('pageSize')}</label>
               <Select
                 defaultValue={10}
                 onChange={props.onPageSizeChange}
@@ -94,8 +94,8 @@ const DataListView: React.ForwardRefExoticComponent<
                   { label: '100', value: 100 }
                 ]}
               />
-            </Flex>
-          </Flex>
+            </div>
+          </div>
         </Flex>
       </div>
     );

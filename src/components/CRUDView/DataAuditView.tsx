@@ -1,6 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Modal, Button, Table } from 'antd';
+/* Import CRUDView styles */
+import './CRUDView.scss';
 
 interface DataAuditViewProps {
   filteredData: any[];
@@ -30,6 +32,7 @@ const DataAuditView: React.ForwardRefExoticComponent<
         ]}
         onCancel={props.handleOk}
         width={'90%'}
+        className="audit-modal"
       >
         <div className="table-container">
           <Table
