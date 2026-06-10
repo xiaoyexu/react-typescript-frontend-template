@@ -51,6 +51,8 @@ const TableDataView: React.ForwardRefExoticComponent<
 
     const [showAuditModal, setShowAuditModal] = useState<boolean>(false);
 
+    const tableConfig = getTableConfig(props.tableId);
+
     React.useImperativeHandle(ref, () => ({}));
 
     const getTableFieldsForDetail = () => {
@@ -80,7 +82,6 @@ const TableDataView: React.ForwardRefExoticComponent<
     };
 
     const handleShowAudit = (id: string) => {
-      const tableConfig = getTableConfig(props.tableId);
       fetchAuditData(tableConfig, id);
       setShowAuditModal(true);
     };
@@ -133,7 +134,7 @@ const TableDataView: React.ForwardRefExoticComponent<
         .catch((error) => {
           error(
             api,
-            t('Error'),
+            t('error'),
             t('errorFetchingData', { error: error.message })
           );
         })
@@ -158,7 +159,7 @@ const TableDataView: React.ForwardRefExoticComponent<
           const message = error.response.data.status.message;
           error(
             api,
-            t('Error'),
+            t('error'),
             t('errorFetchingAuditData', { error: message })
           );
         })
@@ -177,14 +178,14 @@ const TableDataView: React.ForwardRefExoticComponent<
         .then((newItem: any) => {
           notify.success(
             api,
-            t('Success'),
-            `Successfully created new ${props.tableId} item`
+            t('success'),
+            t('itemAddedSuccessfully', { tableName: props.tableId })
           );
           setSelectedItem(newItem.data);
           dataListViewRef.current?.reload();
         })
         .catch((error) => {
-          notify.error(api, t('Error'), t('errorAddingNewItem', { error }));
+          notify.error(api, t('error'), t('errorAddingNewItem', { error }));
         });
     };
 
@@ -193,7 +194,7 @@ const TableDataView: React.ForwardRefExoticComponent<
       editedData: any
     ) => {
       if (!selectedItem || !selectedItem.id) {
-        notify.error(api, t('Error'), t('noRecordSelected'));
+        notify.error(api, t('error'), t('noRecordSelected'));
         return;
       }
 
@@ -206,21 +207,21 @@ const TableDataView: React.ForwardRefExoticComponent<
         .then((updatedItem: any) => {
           notify.success(
             api,
-            t('Success'),
-            `Successfully updated ${props.tableId} item`
+            t('success'),
+            t('itemUpdatedSuccessfully', { tableName: props.tableId })
           );
 
           setSelectedItem(updatedItem.data);
           dataListViewRef.current?.reload();
         })
         .catch((error) => {
-          error(api, t('Error'), t('errorUpdatingRecord', error));
+          error(api, t('error'), t('errorUpdatingRecord', error));
         });
     };
 
     const handleDeleteItem = async (tableConfig: TableConfig) => {
       if (!selectedItem) {
-        notify.error(api, 'Error', t('noRecordSelected'));
+        notify.error(api, t('error'), t('noRecordSelected'));
         return;
       }
 
@@ -232,15 +233,18 @@ const TableDataView: React.ForwardRefExoticComponent<
         .then(() => {
           notify.success(
             api,
-            t('Success'),
-            `Successfully deleted ${props.tableId} item with ID: ${selectedItem.id}`
+            t('success'),
+            t('itemDeletedSuccessfully', {
+              tableName: props.tableId,
+              id: selectedItem.id
+            })
           );
 
           setSelectedItem(null);
           dataListViewRef.current?.reload();
         })
         .catch((error) => {
-          notify.error(api, t('Error'), t('errorDeletingRecord', error));
+          notify.error(api, t('error'), t('errorDeletingRecord', error));
         });
     };
 
@@ -277,10 +281,10 @@ const TableDataView: React.ForwardRefExoticComponent<
 
       return importFunc
         .then((res) => {
-          notify.info(api, 'Info', 'Imported');
+          notify.info(api, t('success'), t('dataImportedSuccessfully'));
         })
         .catch((error) => {
-          notify.error(api, t('Error'), t('errorImportingData', error));
+          notify.error(api, t('error'), t('errorImportingData', error));
         });
     };
 
@@ -311,11 +315,11 @@ const TableDataView: React.ForwardRefExoticComponent<
                   showUploadList={false}
                   maxCount={1}
                 >
-                  <Button type="primary">Import</Button>
+                  <Button type="primary">{t('import')}</Button>
                 </Upload>
 
                 <Button type="primary" onClick={handleExport}>
-                  Export
+                  {t('export')}
                 </Button>
               </Flex>
             </div>
@@ -348,6 +352,7 @@ const TableDataView: React.ForwardRefExoticComponent<
           }
           rightView={
             <DataDetailView
+              tableConfig={tableConfig}
               displayColumns={getTableFieldsForDetail()}
               data={selectedItem}
               handleDataChange={handleDataChange}

@@ -12,33 +12,87 @@
 
 import request, { IRequestExtraConfig, RequestConfig } from '../../service/Api';
 import {
-  ICreateStudentRequest,
-  ICreateStudentResponse,
-  IDeleteStudentResponse,
-  IGetStudentResponse,
-  IImportStudentResponse,
-  IImportStudentsPayload,
-  ISearchStudentAuditResponse,
-  ISearchStudentRequest,
-  ISearchStudentResponse,
-  IUpdateStudentRequest,
-  IUpdateStudentResponse
+  ICreateUserRequest,
+  ICreateUserResponse,
+  IDeleteUserResponse,
+  IGetUserResponse,
+  IImportUserResponse,
+  IImportUsersPayload,
+  ILoginRequest,
+  ILoginResponse,
+  IRefreshTokenResponse,
+  ISearchUserRequest,
+  ISearchUserResponse,
+  IUpdateUserRequest,
+  IUpdateUserResponse
 } from '../types';
 
 /**
- * @description List Students
+ * @description Login
  *
- * @tags students
- * @name ListStudents
- * @request GET:/students
- * @response `200` `ISearchStudentResponse` OK
+ * @tags users
+ * @name Login
+ * @request POST:/users/login
+ * @response `200` `ILoginResponse` OK
  * @response `400` `IErrorResponse` Bad Request
  * @response `401` `IErrorResponse` Unauthorized
  * @response `403` `IErrorResponse` Forbidden
  * @response `404` `IErrorResponse` Not found
  * @response `500` `IErrorResponse` Internal Server Error
  */
-export const listStudents = (
+export const login = (
+  loginRequest: ILoginRequest,
+  params: RequestConfig = {},
+  extraConfig: Partial<IRequestExtraConfig> = {}
+) =>
+  request<ILoginResponse>(
+    {
+      url: `/users/login`,
+      method: 'POST',
+      data: loginRequest,
+      ...params
+    },
+    { ...extraConfig }
+  );
+/**
+ * @description Refresh Token
+ *
+ * @tags users
+ * @name RefreshToken
+ * @request POST:/users/refresh
+ * @response `200` `IRefreshTokenResponse` OK
+ * @response `400` `IErrorResponse` Bad Request
+ * @response `401` `IErrorResponse` Unauthorized
+ * @response `403` `IErrorResponse` Forbidden
+ * @response `404` `IErrorResponse` Not found
+ * @response `500` `IErrorResponse` Internal Server Error
+ */
+export const refreshToken = (
+  params: RequestConfig = {},
+  extraConfig: Partial<IRequestExtraConfig> = {}
+) =>
+  request<IRefreshTokenResponse>(
+    {
+      url: `/users/refresh`,
+      method: 'POST',
+      ...params
+    },
+    { ...extraConfig }
+  );
+/**
+ * @description List Users
+ *
+ * @tags users
+ * @name ListUsers
+ * @request GET:/users
+ * @response `200` `ISearchUserResponse` OK
+ * @response `400` `IErrorResponse` Bad Request
+ * @response `401` `IErrorResponse` Unauthorized
+ * @response `403` `IErrorResponse` Forbidden
+ * @response `404` `IErrorResponse` Not found
+ * @response `500` `IErrorResponse` Internal Server Error
+ */
+export const listUsers = (
   query?: {
     /** @default 20 */
     limit?: number;
@@ -50,9 +104,9 @@ export const listStudents = (
   params: RequestConfig = {},
   extraConfig: Partial<IRequestExtraConfig> = {}
 ) =>
-  request<ISearchStudentResponse>(
+  request<ISearchUserResponse>(
     {
-      url: `/students`,
+      url: `/users`,
       method: 'GET',
       params: query,
       ...params
@@ -60,47 +114,47 @@ export const listStudents = (
     { ...extraConfig }
   );
 /**
- * @description Create Single student
+ * @description Create Single User
  *
- * @tags students
- * @name CreateSingleStudent
- * @request POST:/students
- * @response `200` `ICreateStudentResponse` OK
+ * @tags users
+ * @name CreateSingleUser
+ * @request POST:/users
+ * @response `200` `ICreateUserResponse` OK
  * @response `400` `IErrorResponse` Bad Request
  * @response `401` `IErrorResponse` Unauthorized
  * @response `403` `IErrorResponse` Forbidden
  * @response `404` `IErrorResponse` Not found
  * @response `500` `IErrorResponse` Internal Server Error
  */
-export const createSingleStudent = (
-  createStudentRequest: ICreateStudentRequest,
+export const createSingleUser = (
+  createUserRequest: ICreateUserRequest,
   params: RequestConfig = {},
   extraConfig: Partial<IRequestExtraConfig> = {}
 ) =>
-  request<ICreateStudentResponse>(
+  request<ICreateUserResponse>(
     {
-      url: `/students`,
+      url: `/users`,
       method: 'POST',
-      data: createStudentRequest,
+      data: createUserRequest,
       ...params
     },
     { ...extraConfig }
   );
 /**
- * @description Search Students
+ * @description Search Users
  *
- * @tags students
- * @name SearchStudents
- * @request POST:/students/search
- * @response `200` `ISearchStudentResponse` OK
+ * @tags users
+ * @name SearchUsers
+ * @request POST:/users/search
+ * @response `200` `ISearchUserResponse` OK
  * @response `400` `IErrorResponse` Bad Request
  * @response `401` `IErrorResponse` Unauthorized
  * @response `403` `IErrorResponse` Forbidden
  * @response `404` `IErrorResponse` Not found
  * @response `500` `IErrorResponse` Internal Server Error
  */
-export const searchStudents = (
-  searchStudentRequest: ISearchStudentRequest,
+export const searchUsers = (
+  searchUserRequest: ISearchUserRequest,
   query?: {
     /** @default 20 */
     limit?: number;
@@ -112,137 +166,102 @@ export const searchStudents = (
   params: RequestConfig = {},
   extraConfig: Partial<IRequestExtraConfig> = {}
 ) =>
-  request<ISearchStudentResponse>(
+  request<ISearchUserResponse>(
     {
-      url: `/students/search`,
+      url: `/users/search`,
       method: 'POST',
       params: query,
-      data: searchStudentRequest,
+      data: searchUserRequest,
       ...params
     },
     { ...extraConfig }
   );
 /**
- * @description Get Single student
+ * @description Get Single User
  *
- * @tags students
- * @name GetSingleStudent
- * @request GET:/students/{student-id}
- * @response `200` `IGetStudentResponse` OK
+ * @tags users
+ * @name GetSingleUser
+ * @request GET:/users/{user-id}
+ * @response `200` `IGetUserResponse` OK
  * @response `400` `IErrorResponse` Bad Request
  * @response `401` `IErrorResponse` Unauthorized
  * @response `403` `IErrorResponse` Forbidden
  * @response `404` `IErrorResponse` Not found
  * @response `500` `IErrorResponse` Internal Server Error
  */
-export const getSingleStudent = (
-  studentId: string,
+export const getSingleUser = (
+  userId: string,
   params: RequestConfig = {},
   extraConfig: Partial<IRequestExtraConfig> = {}
 ) =>
-  request<IGetStudentResponse>(
+  request<IGetUserResponse>(
     {
-      url: `/students/${studentId}`,
+      url: `/users/${userId}`,
       method: 'GET',
       ...params
     },
     { ...extraConfig }
   );
 /**
- * @description Update Single student
+ * @description Update Single User
  *
- * @tags students
- * @name UpdateSingleStudent
- * @request PUT:/students/{student-id}
- * @response `200` `IUpdateStudentResponse` OK
+ * @tags users
+ * @name UpdateSingleUser
+ * @request PUT:/users/{user-id}
+ * @response `200` `IUpdateUserResponse` OK
  * @response `400` `IErrorResponse` Bad Request
  * @response `401` `IErrorResponse` Unauthorized
  * @response `403` `IErrorResponse` Forbidden
  * @response `404` `IErrorResponse` Not found
  * @response `500` `IErrorResponse` Internal Server Error
  */
-export const updateSingleStudent = (
-  studentId: string,
-  updateStudentRequest: IUpdateStudentRequest,
+export const updateSingleUser = (
+  userId: string,
+  updateUserRequest: IUpdateUserRequest,
   params: RequestConfig = {},
   extraConfig: Partial<IRequestExtraConfig> = {}
 ) =>
-  request<IUpdateStudentResponse>(
+  request<IUpdateUserResponse>(
     {
-      url: `/students/${studentId}`,
+      url: `/users/${userId}`,
       method: 'PUT',
-      data: updateStudentRequest,
+      data: updateUserRequest,
       ...params
     },
     { ...extraConfig }
   );
 /**
- * @description Delete Single student
+ * @description Delete Single User
  *
- * @tags students
- * @name DeleteSingleStudent
- * @request DELETE:/students/{student-id}
- * @response `200` `IDeleteStudentResponse` OK
+ * @tags users
+ * @name DeleteSingleUser
+ * @request DELETE:/users/{user-id}
+ * @response `200` `IDeleteUserResponse` OK
  * @response `400` `IErrorResponse` Bad Request
  * @response `401` `IErrorResponse` Unauthorized
  * @response `403` `IErrorResponse` Forbidden
  * @response `404` `IErrorResponse` Not found
  * @response `500` `IErrorResponse` Internal Server Error
  */
-export const deleteSingleStudent = (
-  studentId: string,
+export const deleteSingleUser = (
+  userId: string,
   params: RequestConfig = {},
   extraConfig: Partial<IRequestExtraConfig> = {}
 ) =>
-  request<IDeleteStudentResponse>(
+  request<IDeleteUserResponse>(
     {
-      url: `/students/${studentId}`,
+      url: `/users/${userId}`,
       method: 'DELETE',
       ...params
     },
     { ...extraConfig }
   );
 /**
- * @description Get Single Student Audits
+ * @description Export Users
  *
- * @tags students
- * @name GetSingleStudentAudits
- * @request GET:/students/{student-id}/audits
- * @response `200` `ISearchStudentAuditResponse` OK
- * @response `400` `IErrorResponse` Bad Request
- * @response `401` `IErrorResponse` Unauthorized
- * @response `403` `IErrorResponse` Forbidden
- * @response `404` `IErrorResponse` Not found
- * @response `500` `IErrorResponse` Internal Server Error
- */
-export const getSingleStudentAudits = (
-  studentId: string,
-  query?: {
-    /** @default 20 */
-    limit?: number;
-    /** @default 0 */
-    offset?: number;
-    /** @default "" */
-    sortBy?: string;
-  },
-  params: RequestConfig = {},
-  extraConfig: Partial<IRequestExtraConfig> = {}
-) =>
-  request<ISearchStudentAuditResponse>(
-    {
-      url: `/students/${studentId}/audits`,
-      method: 'GET',
-      params: query,
-      ...params
-    },
-    { ...extraConfig }
-  );
-/**
- * @description Export Students
- *
- * @tags students
- * @name ExportStudents
- * @request POST:/students/export
+ * @tags users
+ * @name ExportUsers
+ * @request POST:/users/export
  * @response `200` `File` OK
  * @response `400` `IErrorResponse` Bad Request
  * @response `401` `IErrorResponse` Unauthorized
@@ -250,8 +269,8 @@ export const getSingleStudentAudits = (
  * @response `404` `IErrorResponse` Not found
  * @response `500` `IErrorResponse` Internal Server Error
  */
-export const exportStudents = (
-  searchStudentRequest: ISearchStudentRequest,
+export const exportUsers = (
+  searchUserRequest: ISearchUserRequest,
   query?: {
     /** @default 20 */
     limit?: number;
@@ -265,35 +284,35 @@ export const exportStudents = (
 ) =>
   request<File>(
     {
-      url: `/students/export`,
+      url: `/users/export`,
       method: 'POST',
       params: query,
-      data: searchStudentRequest,
+      data: searchUserRequest,
       ...params
     },
     { ...extraConfig }
   );
 /**
- * @description Import Students
+ * @description Import Users
  *
- * @tags students
- * @name ImportStudents
- * @request POST:/students/import
- * @response `200` `IImportStudentResponse` OK
+ * @tags users
+ * @name ImportUsers
+ * @request POST:/users/import
+ * @response `200` `IImportUserResponse` OK
  * @response `400` `IErrorResponse` Bad Request
  * @response `401` `IErrorResponse` Unauthorized
  * @response `403` `IErrorResponse` Forbidden
  * @response `404` `IErrorResponse` Not found
  * @response `500` `IErrorResponse` Internal Server Error
  */
-export const importStudents = (
+export const importUsers = (
   data: FormData,
   params: RequestConfig = {},
   extraConfig: Partial<IRequestExtraConfig> = {}
 ) =>
-  request<IImportStudentResponse>(
+  request<IImportUserResponse>(
     {
-      url: `/students/import`,
+      url: `/users/import`,
       method: 'POST',
       data: data,
       type: 'multipart/form-data',

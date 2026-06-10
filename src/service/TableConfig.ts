@@ -7,7 +7,26 @@ import {
   importStudents,
   exportStudents
 } from '@/api/modules/Students';
+import {
+  searchUsers,
+  createSingleUser,
+  updateSingleUser,
+  deleteSingleUser,
+  importUsers,
+  exportUsers
+} from '@/api/modules/Users';
+import {
+  searchRoles,
+  createSingleRole,
+  updateSingleRole,
+  deleteSingleRole,
+  importRoles,
+  exportRoles
+} from '@/api/modules/Roles';
+
 import { searchStudentAudits } from '@/api/modules/StudentAudits';
+import { searchUserAudits } from '@/api/modules/UserAudits';
+import { searchRoleAudits } from '@/api/modules/RoleAudits';
 
 type ApiProxy = {
   search(query?: any, pagination?: any, config?: any): Promise<any>;
@@ -25,6 +44,7 @@ type TableConfig = {
   icon: React.ReactNode;
   columns: ColumnConfigs;
   proxy: ApiProxy;
+  extraFunctions?: React.ReactNode[];
 };
 
 type ColumnConfig = {
@@ -48,6 +68,8 @@ type ColumnConfig = {
   readonly?: boolean;
   fixed?: string;
   className?: string;
+  render?: (value: any, record: TableData, index: number) => React.ReactNode;
+  extraFunctions?: React.ReactNode[];
 };
 
 type SelectOption = {
@@ -121,6 +143,77 @@ const TABLE_CONFIG_MAP: Record<string, TableConfig> = {
       export: exportStudents,
       searchAudits: searchStudentAudits
     }
+  },
+  users: {
+    id: 'users',
+    name: 'Users',
+    icon: '👥',
+    columns: [
+      {
+        title: 'ID (Blank for New)',
+        dataIndex: 'id',
+        key: 'id',
+        width: 330,
+        type: 'text',
+        fixed: 'start'
+      },
+      {
+        title: 'Account Name',
+        dataIndex: 'accountName',
+        key: 'accountName',
+        width: 220,
+        type: 'text',
+        required: true
+      },
+      {
+        title: 'Role',
+        dataIndex: 'role',
+        key: 'role',
+        width: 150,
+        type: 'text',
+        required: true
+      }
+    ],
+    proxy: {
+      search: searchUsers,
+      create: createSingleUser,
+      update: updateSingleUser,
+      delete: deleteSingleUser,
+      import: importUsers,
+      export: exportUsers,
+      searchAudits: searchUserAudits
+    }
+  },
+  roles: {
+    id: 'roles',
+    name: 'Roles',
+    icon: '🔐',
+    columns: [
+      {
+        title: 'ID (Blank for New)',
+        dataIndex: 'id',
+        key: 'id',
+        width: 330,
+        type: 'text'
+      },
+      {
+        title: 'Authority',
+        dataIndex: 'authority',
+        key: 'authority',
+        width: 400,
+        type: 'textarea',
+        required: true
+      }
+    ],
+    proxy: {
+      search: searchRoles,
+      create: createSingleRole,
+      update: updateSingleRole,
+      delete: deleteSingleRole,
+      import: importRoles,
+      export: exportRoles,
+      searchAudits: searchRoleAudits
+    }
   }
 };
 
@@ -128,7 +221,10 @@ const getTableConfig = (tableName: string) => {
   return TABLE_CONFIG_MAP[tableName];
 };
 
-const getTableFields = (tableName: string, isAudit?: boolean) => {
+const getTableFields = (
+  tableName: string,
+  isAudit?: boolean
+): ColumnConfigs => {
   let columns: ColumnConfigs = TABLE_CONFIG_MAP[tableName]?.columns;
 
   if (!columns) {
