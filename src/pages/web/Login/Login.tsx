@@ -54,6 +54,7 @@ const Login: React.FC = () => {
       })
       .finally(() => {
         form.resetFields();
+        setLoading(false);
       });
   };
 
