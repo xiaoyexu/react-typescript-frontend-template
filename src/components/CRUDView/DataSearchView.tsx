@@ -1,5 +1,7 @@
 import React, { BaseSyntheticEvent, useState } from 'react';
 import { Input } from 'antd';
+/* Import CRUDView styles */
+import './CRUDView.scss';
 
 const { Search } = Input;
 
@@ -18,7 +20,7 @@ const DataSearchView: React.ForwardRefExoticComponent<
     React.useImperativeHandle(ref, () => ({}));
 
     return (
-      <>
+      <div className="search-container">
         <Search
           placeholder="input search text"
           onSearch={props.onSearch}
@@ -28,7 +30,7 @@ const DataSearchView: React.ForwardRefExoticComponent<
           enterButton
           allowClear
         />
-      </>
+      </div>
     );
   }
 );

@@ -12,6 +12,7 @@ import {
   Space,
   Flex
 } from 'antd';
+import { CloseOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import {
   ColumnConfig,
@@ -22,6 +23,9 @@ import {
 
 import type { FormProps } from 'antd';
 
+/* Import CRUDView styles */
+import './CRUDView.scss';
+
 export type DataAction = 'view' | 'add' | 'edit' | 'delete';
 
 interface DataDetailViewProps {
@@ -30,6 +34,7 @@ interface DataDetailViewProps {
   data: any;
   handleDataChange: (action: DataAction, data: any) => Promise<void>;
   handleShowAudit: (id: string) => void;
+  handleClose?: () => void;
 }
 
 export type DataDetailViewRef = {};
@@ -257,46 +262,53 @@ const DataDetailView: React.ForwardRefExoticComponent<
     };
 
     return (
-      <div>
-        <Flex
-          align="center"
-          gap={5}
-          justify="space-between"
-          style={{ marginBottom: 20 }}
-        >
-          <h3>{t('itemDetails')}</h3>
-          <Flex gap={5} align="center" justify="space-between">
-            {props.tableConfig.extraFunctions?.map((item, idx) => {
-              return <div key={idx}>{item}</div>;
-            })}
-            <Button type="primary" onClick={handleAddNew}>
-              {t('new')}
-            </Button>
-            <Button
-              type="primary"
-              onClick={() => setDataAction('edit')}
-              disabled={!props.data}
-            >
-              {t('edit')}
-            </Button>
-            <Button
-              type="primary"
-              danger
-              onClick={() => props.handleDataChange('delete', props.data)}
-              disabled={!props.data}
-            >
-              {t('delete')}
-            </Button>
-            <Button
-              type="default"
-              onClick={() => props.handleShowAudit(props.data?.id)}
-              disabled={!props.data}
-            >
-              {t('auditLog')}
-            </Button>
+      <div className="detail-card">
+        <div className="card-header">
+          <Flex align="center" gap={5} justify="space-between">
+            <h3>
+              {props.handleClose && (
+                <Button
+                  type="text"
+                  icon={<CloseOutlined />}
+                  onClick={props.handleClose}
+                  className="close-btn"
+                />
+              )}{' '}
+              {t('itemDetails')}
+            </h3>
+            <div className="action-buttons">
+              {props.tableConfig.extraFunctions?.map((item, idx) => {
+                return <div key={idx}>{item}</div>;
+              })}
+              <Button type="primary" onClick={handleAddNew}>
+                {t('new')}
+              </Button>
+              <Button
+                type="primary"
+                onClick={() => setDataAction('edit')}
+                disabled={!props.data}
+              >
+                {t('edit')}
+              </Button>
+              <Button
+                type="primary"
+                danger
+                onClick={() => props.handleDataChange('delete', props.data)}
+                disabled={!props.data}
+              >
+                {t('delete')}
+              </Button>
+              <Button
+                type="default"
+                onClick={() => props.handleShowAudit(props.data?.id)}
+                disabled={!props.data}
+              >
+                {t('auditLog')}
+              </Button>
+            </div>
           </Flex>
-        </Flex>
-        <Flex>
+        </div>
+        <div className="card-body">
           <Form
             key={'data-form'}
             form={form}
@@ -320,7 +332,7 @@ const DataDetailView: React.ForwardRefExoticComponent<
             )}
             {props.displayColumns.map((field) => renderFormField(field))}
           </Form>
-        </Flex>
+        </div>
       </div>
     );
   }

@@ -2,10 +2,12 @@ import React, { useRef } from 'react';
 
 export default ({
   leftView,
-  rightView
+  rightView,
+  showRightView = true
 }: {
   leftView: React.ReactNode;
   rightView: React.ReactNode;
+  showRightView?: boolean;
 }) => {
   const dataViewRef = useRef<HTMLDivElement>(null);
   const resizableContainerRef = useRef<HTMLDivElement>(null);
@@ -48,6 +50,16 @@ export default ({
     document.addEventListener('mousemove', handleResize);
     document.addEventListener('mouseup', handleResizeEnd);
   };
+
+  if (!showRightView) {
+    return (
+      <div className="resizable-container" ref={resizableContainerRef}>
+        <div className="data-view full-width" ref={dataViewRef}>
+          {leftView}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="resizable-container" ref={resizableContainerRef}>
