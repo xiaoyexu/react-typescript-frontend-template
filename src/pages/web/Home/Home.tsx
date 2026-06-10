@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Input, Flex, Select } from 'antd';
+import { Input, Flex, Select, Button } from 'antd';
 import CRUDView from '@/components/CRUDView';
+import { useAuth } from '@/app/auth/useAuth';
 import { getTables } from '@/service/TableConfig';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
   const [t, i18n] = useTranslation();
+  const { user, logout } = useAuth();
 
   const [activeTable, setActiveTable] = useState<string>('students');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [availableTables, setAvailableTables] = useState(getTables());
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
 
   const handleTableSelect = (tableId: string) => {
     setActiveTable(tableId);
@@ -34,10 +37,10 @@ const Home: React.FC = () => {
   return (
     <div className="admin-dashboard">
       <header className="admin-header">
-        <h1>Admin Dashboard</h1>
+        <h1>{t('adminDashboard')}</h1>
         <div className="user-info">
           <Flex gap={15} justify="center" align="space-between">
-            <h2>Admin User</h2>
+            <h2>{t('adminUser', { name: user?.username })}</h2>
             <Select
               value={i18n.language}
               onChange={handleLanguageChange}
@@ -56,7 +59,15 @@ const Home: React.FC = () => {
       </header>
 
       <div className="admin-content">
-        <div className="sidebar">
+        <div className={`sidebar ${isSidebarCollapsed ? 'collapsed' : ''}`}>
+          <div className="sidebar-toggle">
+            <Button
+              type="text"
+              icon={isSidebarCollapsed ? <span>▶</span> : <span>◀</span>}
+              onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+              className="toggle-button"
+            />
+          </div>
           <div className="search-box">
             <Input
               placeholder="Search tables..."

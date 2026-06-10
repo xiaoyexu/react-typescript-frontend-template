@@ -16,7 +16,8 @@ import dayjs from 'dayjs';
 import {
   ColumnConfig,
   ColumnConfigs,
-  SelectOption
+  SelectOption,
+  TableConfig
 } from '@/service/TableConfig';
 
 import type { FormProps } from 'antd';
@@ -24,6 +25,7 @@ import type { FormProps } from 'antd';
 export type DataAction = 'view' | 'add' | 'edit' | 'delete';
 
 interface DataDetailViewProps {
+  tableConfig: TableConfig;
   displayColumns: ColumnConfigs;
   data: any;
   handleDataChange: (action: DataAction, data: any) => Promise<void>;
@@ -88,7 +90,7 @@ const DataDetailView: React.ForwardRefExoticComponent<
               label={field.title}
               rules={getRules()}
               getValueProps={(value) => ({
-                value: value ? dayjs(value) : undefined
+                value: value ? dayjs(value, 'HH:mm:ss') : undefined
               })}
             >
               <TimePicker disabled={field.readonly} style={{ width: '100%' }} />
@@ -163,7 +165,6 @@ const DataDetailView: React.ForwardRefExoticComponent<
               key={field.key}
               name={field.key}
               label={field.title}
-              valuePropName="checked"
               rules={getRules()}
               getValueProps={(value) => ({
                 value: value ? value : ''
@@ -183,7 +184,6 @@ const DataDetailView: React.ForwardRefExoticComponent<
               key={field.key}
               name={field.key}
               label={field.title}
-              valuePropName="checked"
               rules={getRules()}
               getValueProps={(value) => ({
                 value: value ? value : ''
@@ -264,17 +264,20 @@ const DataDetailView: React.ForwardRefExoticComponent<
           justify="space-between"
           style={{ marginBottom: 20 }}
         >
-          <h3>Item Details</h3>
+          <h3>{t('itemDetails')}</h3>
           <Flex gap={5} align="center" justify="space-between">
+            {props.tableConfig.extraFunctions?.map((item, idx) => {
+              return <div key={idx}>{item}</div>;
+            })}
             <Button type="primary" onClick={handleAddNew}>
-              New
+              {t('new')}
             </Button>
             <Button
               type="primary"
               onClick={() => setDataAction('edit')}
               disabled={!props.data}
             >
-              Edit
+              {t('edit')}
             </Button>
             <Button
               type="primary"
@@ -282,14 +285,14 @@ const DataDetailView: React.ForwardRefExoticComponent<
               onClick={() => props.handleDataChange('delete', props.data)}
               disabled={!props.data}
             >
-              Delete
+              {t('delete')}
             </Button>
             <Button
               type="default"
               onClick={() => props.handleShowAudit(props.data?.id)}
               disabled={!props.data}
             >
-              Audit log
+              {t('auditLog')}
             </Button>
           </Flex>
         </Flex>
@@ -308,9 +311,9 @@ const DataDetailView: React.ForwardRefExoticComponent<
                 <Form.Item>
                   <Space>
                     <Button type="primary" htmlType="submit" loading={loading}>
-                      Save
+                      {t('save')}
                     </Button>
-                    <Button onClick={handleCancel}>Cancel</Button>
+                    <Button onClick={handleCancel}>{t('cancel')}</Button>
                   </Space>
                 </Form.Item>
               </Flex>

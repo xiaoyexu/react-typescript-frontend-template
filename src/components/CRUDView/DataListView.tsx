@@ -1,5 +1,6 @@
 import React, { useLayoutEffect } from 'react';
 import { Flex, Table, Pagination, Select } from 'antd';
+import { useTranslation } from 'react-i18next';
 import { TableData } from '@/service/TableConfig';
 
 export interface DataListViewProps {
@@ -30,6 +31,8 @@ const DataListView: React.ForwardRefExoticComponent<
   DataListViewProps & React.RefAttributes<DataListViewRef>
 > = React.forwardRef<DataListViewRef, DataListViewProps>(
   (props: DataListViewProps, ref: React.ForwardedRef<DataListViewRef>) => {
+    const [t] = useTranslation();
+
     React.useImperativeHandle(ref, () => ({
       reload() {
         props.handleFetchData(
@@ -78,7 +81,7 @@ const DataListView: React.ForwardRefExoticComponent<
             </Flex>
             <Flex align="center" gap={5}>
               <Flex justify="center">
-                <label>Page Size:</label>
+                <label>{t('pageSize')}</label>
               </Flex>
               <Select
                 defaultValue={10}

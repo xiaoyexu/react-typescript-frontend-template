@@ -2,7 +2,7 @@ import React, { createContext, useState, useCallback } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import { TokenPayload } from '@/model/model';
 import { IUser } from '@/model/model';
-import { login, refreshToken } from '@/api/modules/User';
+import { login, refreshToken } from '@/api/modules/Users';
 import type { ILoginResponse, IRefreshTokenResponse } from '@/api/types';
 
 export interface IAuthContext {
