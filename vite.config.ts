@@ -21,7 +21,7 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src')
     }
   },
-  base: '/admin/',
+  base: '/tadmin/',
   envDir: './env',
   build: {
     target: 'esnext',
