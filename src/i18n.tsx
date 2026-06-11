@@ -37,7 +37,7 @@ i18n
     defaultNS: 'translation',
     backend: {
       loadPath: (lng: string, ns: string) => {
-        return `/admin/locales/{{lng}}/{{ns}}.json?lng={{lng}}&{{ns}}`;
+        return `/tadmin/locales/{{lng}}/{{ns}}.json?lng={{lng}}&{{ns}}`;
         // if (ns == "translation") {
         //   return `/locales/{{lng}}/{{ns}}.json?lng={{lng}}&{{ns}}`;
         // } else {

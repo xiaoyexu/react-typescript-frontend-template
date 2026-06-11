@@ -3,8 +3,47 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/app/auth/useAuth';
 import { IUser, ILogin } from '@/model/model';
-import { Button, Form, Input, Flex, Segmented } from 'antd';
+import { Button, Form, Input, Flex, Switch, Segmented } from 'antd';
 import { setStorageItem, clearStorageItem } from '@/service/Storage';
+import {
+  ThemeMode,
+  applyTheme,
+  getStoredTheme,
+  setStoredTheme
+} from '@/service/Theme';
+
+const SunIcon = () => (
+  <svg
+    className="theme-icon-svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    aria-hidden="true"
+  >
+    <circle cx="12" cy="12" r="4.5" stroke="currentColor" strokeWidth="1.8" />
+    <path
+      d="M12 2.5V5M12 19V21.5M4.93 4.93L6.7 6.7M17.3 17.3L19.07 19.07M2.5 12H5M19 12H21.5M4.93 19.07L6.7 17.3M17.3 6.7L19.07 4.93"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
+const MoonIcon = () => (
+  <svg
+    className="theme-icon-svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    aria-hidden="true"
+  >
+    <path
+      d="M15.5 3.8a8.7 8.7 0 1 0 4.7 14.7A8.1 8.1 0 0 1 15.5 3.8Z"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
 
 type FieldType = {
   username?: string;
@@ -19,6 +58,7 @@ const Login: React.FC = () => {
   const [t, i18n] = useTranslation();
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
+  const [themeMode, setThemeMode] = useState<ThemeMode>(() => getStoredTheme());
 
   const { login } = useAuth();
 
@@ -26,6 +66,11 @@ const Login: React.FC = () => {
     // Trigger entrance animation
     setTimeout(() => setIsVisible(true), 100);
   }, []);
+
+  useEffect(() => {
+    applyTheme(themeMode);
+    setStoredTheme(themeMode);
+  }, [themeMode]);
 
   const handleLoginOk = (user: IUser) => {
     setStorageItem('user', JSON.stringify(user));
@@ -222,17 +267,53 @@ const Login: React.FC = () => {
         </Form>
 
         <div className="login-footer">
-          <div className="language-switcher">
-            <Segmented
-              options={[
-                { label: '简', value: 'zh_CN' },
-                { label: '繁', value: 'zh_HK' },
-                { label: 'En', value: 'en_US' }
-              ]}
-              value={i18n.language}
-              onChange={changeLanguage}
+          <Flex gap={12} vertical align="center">
+            <Switch
+              checked={themeMode === 'dark-enterprise'}
+              onChange={(checked) =>
+                setThemeMode(checked ? 'dark-enterprise' : 'classic-enterprise')
+              }
+              checkedChildren={
+                <div
+                  style={{
+                    alignItems: 'center',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    height: '100%',
+                    width: '100%'
+                  }}
+                >
+                  <MoonIcon />
+                </div>
+              }
+              unCheckedChildren={
+                <div
+                  style={{
+                    alignItems: 'center',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    height: '100%',
+                    width: '100%'
+                  }}
+                >
+                  <SunIcon />
+                </div>
+              }
+              className="theme-icon-switch"
+              aria-label={t('themeSwitch')}
             />
-          </div>
+            <div className="language-switcher">
+              <Segmented
+                options={[
+                  { label: '简', value: 'zh_CN' },
+                  { label: '繁', value: 'zh_HK' },
+                  { label: 'En', value: 'en_US' }
+                ]}
+                value={i18n.language}
+                onChange={changeLanguage}
+              />
+            </div>
+          </Flex>
         </div>
       </div>
     </div>
