@@ -1,7 +1,9 @@
+import React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { useAuth } from '../auth/useAuth';
 import Home from '../../pages/web/Home';
 import Login from '../../pages/web/Login';
+import TreeCosmoDemo from '../../pages/web/TreeCosmoDemo';
 
 // Protected route component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -27,6 +29,11 @@ export default () => {
         }
       />
       <Route key="login" path="/login" element={<Login />} />
+      <Route
+        key="tree-cosmo-demo"
+        path="/tree-cosmo-demo"
+        element={<TreeCosmoDemo />}
+      />
     </Routes>
   );
 };
