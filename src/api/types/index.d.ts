@@ -101,7 +101,6 @@ export interface IImportStudentResponse {
 }
 
 export interface IImportStudentsPayload {
-  /** @format binary */
   file: File;
 }
 
@@ -340,8 +339,6 @@ export interface IUser {
   createdAt?: string;
   createdBy?: string;
   id?: string;
-  passwordHash?: string;
-  refreshToken?: string;
   role?: string;
   updatedAt?: string;
   updatedBy?: string;
@@ -354,8 +351,6 @@ export interface IUserAudit {
   createdAt?: string;
   createdBy?: string;
   id?: string;
-  passwordHash?: string;
-  refreshToken?: string;
   role?: string;
   updatedAt?: string;
   updatedBy?: string;
