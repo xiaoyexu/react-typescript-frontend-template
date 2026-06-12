@@ -123,6 +123,11 @@ export interface ILoginResponse {
   status?: IResponseStatus;
 }
 
+export interface ILogoutResponse {
+  data?: string;
+  status?: IResponseStatus;
+}
+
 export interface IPagedRoleAudits {
   data?: IRoleAudits;
   /** @format int64 */

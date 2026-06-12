@@ -1,4 +1,4 @@
-swagger: '2.0'
+swagger: "2.0"
 info:
   title: OpenAPI definition
   version: v0
@@ -21,13 +21,13 @@ consumes:
 parameters:
   Access-Token:
     name: Authorization
-    description: 'Bearer + {space} + {accessToken}. Example: Bearer KGNsaWVudF9pZDpjbGllbnRfc2VjcmV0KQ=='
+    description: "Bearer + {space} + {accessToken}. Example: Bearer KGNsaWVudF9pZDpjbGllbnRfc2VjcmV0KQ=="
     in: header
     required: true
     type: string
   X-APP-ENV:
     name: x-app-env
-    description: 'Application Environment'
+    description: "Application Environment"
     in: header
     required: true
     type: string
@@ -40,7 +40,7 @@ parameters:
   Accept-Language:
     name: Accept-Language
     in: header
-    description: 'language [en_HK, zh_HK, zh_CN]'
+    description: "language [en_HK, zh_HK, zh_CN]"
     type: string
     enum:
       - en_HK
@@ -60,7 +60,7 @@ parameters:
     name: sortBy
     in: query
     type: string
-    default: ''
+    default: ""
   Student-Id:
     name: student-id
     required: true
@@ -116,27 +116,61 @@ paths:
           schema:
             $ref: '#/definitions/LoginRequest'
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             $ref: '#/definitions/LoginResponse'
-        '400':
+        "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '401':
+        "401":
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '403':
+        "403":
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '404':
+        "404":
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '500':
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /users/logout:
+    post:
+      tags:
+        - users
+      description: Logout
+      operationId: logout
+      parameters:
+        - $ref: '#/parameters/X-Trace-ID'
+        - $ref: '#/parameters/Access-Token'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/LogoutResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "404":
+          description: Not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -150,27 +184,27 @@ paths:
         - $ref: '#/parameters/X-Trace-ID'
         - $ref: '#/parameters/Access-Token'
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             $ref: '#/definitions/RefreshTokenResponse'
-        '400':
+        "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '401':
+        "401":
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '403':
+        "403":
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '404':
+        "404":
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '500':
+        "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -188,27 +222,27 @@ paths:
         - $ref: '#/parameters/Offset'
         - $ref: '#/parameters/SortBy'
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             $ref: '#/definitions/SearchStudentResponse'
-        '400':
+        "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '401':
+        "401":
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '403':
+        "403":
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '404':
+        "404":
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '500':
+        "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -225,27 +259,27 @@ paths:
           schema:
             $ref: '#/definitions/CreateStudentRequest'
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             $ref: '#/definitions/CreateStudentResponse'
-        '400':
+        "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '401':
+        "401":
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '403':
+        "403":
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '404':
+        "404":
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '500':
+        "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -266,27 +300,27 @@ paths:
           schema:
             $ref: '#/definitions/SearchStudentRequest'
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             $ref: '#/definitions/SearchStudentResponse'
-        '400':
+        "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '401':
+        "401":
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '403':
+        "403":
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '404':
+        "404":
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '500':
+        "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -300,27 +334,27 @@ paths:
         - $ref: '#/parameters/X-Trace-ID'
         - $ref: '#/parameters/Student-Id'
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             $ref: '#/definitions/GetStudentResponse'
-        '400':
+        "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '401':
+        "401":
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '403':
+        "403":
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '404':
+        "404":
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '500':
+        "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -338,27 +372,27 @@ paths:
           schema:
             $ref: '#/definitions/UpdateStudentRequest'
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             $ref: '#/definitions/UpdateStudentResponse'
-        '400':
+        "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '401':
+        "401":
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '403':
+        "403":
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '404':
+        "404":
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '500':
+        "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -371,27 +405,27 @@ paths:
         - $ref: '#/parameters/X-Trace-ID'
         - $ref: '#/parameters/Student-Id'
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             $ref: '#/definitions/DeleteStudentResponse'
-        '400':
+        "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '401':
+        "401":
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '403':
+        "403":
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '404':
+        "404":
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '500':
+        "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -408,27 +442,27 @@ paths:
         - $ref: '#/parameters/Offset'
         - $ref: '#/parameters/SortBy'
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             $ref: '#/definitions/SearchStudentAuditResponse'
-        '400':
+        "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '401':
+        "401":
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '403':
+        "403":
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '404':
+        "404":
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '500':
+        "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -449,28 +483,28 @@ paths:
           schema:
             $ref: '#/definitions/SearchStudentRequest'
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             type: string
             format: binary
-        '400':
+        "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '401':
+        "401":
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '403':
+        "403":
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '404':
+        "404":
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '500':
+        "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -489,27 +523,27 @@ paths:
           type: file
           required: true
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             $ref: '#/definitions/ImportStudentResponse'
-        '400':
+        "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '401':
+        "401":
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '403':
+        "403":
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '404':
+        "404":
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '500':
+        "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -533,27 +567,27 @@ paths:
           schema:
             $ref: '#/definitions/SearchStudentAuditRequest'
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             $ref: '#/definitions/SearchStudentAuditResponse'
-        '400':
+        "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '401':
+        "401":
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '403':
+        "403":
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '404':
+        "404":
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '500':
+        "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -568,27 +602,27 @@ paths:
         - $ref: '#/parameters/Access-Token'
         - $ref: '#/parameters/Student-Audit-Id'
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             $ref: '#/definitions/GetStudentAuditResponse'
-        '400':
+        "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '401':
+        "401":
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '403':
+        "403":
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '404':
+        "404":
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '500':
+        "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -610,28 +644,28 @@ paths:
           schema:
             $ref: '#/definitions/SearchStudentAuditRequest'
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             type: string
             format: binary
-        '400':
+        "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '401':
+        "401":
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '403':
+        "403":
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '404':
+        "404":
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '500':
+        "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -651,27 +685,27 @@ paths:
           schema:
             $ref: '#/definitions/CreateRoleRequest'
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             $ref: '#/definitions/CreateRoleResponse'
-        '400':
+        "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '401':
+        "401":
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '403':
+        "403":
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '404':
+        "404":
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '500':
+        "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -693,27 +727,27 @@ paths:
           schema:
             $ref: '#/definitions/SearchRoleRequest'
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             $ref: '#/definitions/SearchRoleResponse'
-        '400':
+        "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '401':
+        "401":
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '403':
+        "403":
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '404':
+        "404":
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '500':
+        "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -728,27 +762,27 @@ paths:
         - $ref: '#/parameters/Access-Token'
         - $ref: '#/parameters/Role-Id'
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             $ref: '#/definitions/GetRoleResponse'
-        '400':
+        "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '401':
+        "401":
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '403':
+        "403":
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '404':
+        "404":
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '500':
+        "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -767,27 +801,27 @@ paths:
           schema:
             $ref: '#/definitions/UpdateRoleRequest'
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             $ref: '#/definitions/UpdateRoleResponse'
-        '400':
+        "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '401':
+        "401":
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '403':
+        "403":
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '404':
+        "404":
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '500':
+        "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -801,27 +835,27 @@ paths:
         - $ref: '#/parameters/Access-Token'
         - $ref: '#/parameters/Role-Id'
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             $ref: '#/definitions/DeleteRoleResponse'
-        '400':
+        "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '401':
+        "401":
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '403':
+        "403":
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '404':
+        "404":
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '500':
+        "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -843,28 +877,28 @@ paths:
           schema:
             $ref: '#/definitions/SearchRoleRequest'
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             type: string
             format: binary
-        '400':
+        "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '401':
+        "401":
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '403':
+        "403":
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '404':
+        "404":
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '500':
+        "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -884,27 +918,27 @@ paths:
           type: file
           required: true
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             $ref: '#/definitions/ImportRoleResponse'
-        '400':
+        "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '401':
+        "401":
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '403':
+        "403":
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '404':
+        "404":
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '500':
+        "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -927,27 +961,27 @@ paths:
           schema:
             $ref: '#/definitions/SearchRoleAuditRequest'
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             $ref: '#/definitions/SearchRoleAuditResponse'
-        '400':
+        "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '401':
+        "401":
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '403':
+        "403":
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '404':
+        "404":
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '500':
+        "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -962,27 +996,27 @@ paths:
         - $ref: '#/parameters/Access-Token'
         - $ref: '#/parameters/Role-Audit-Id'
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             $ref: '#/definitions/GetRoleAuditResponse'
-        '400':
+        "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '401':
+        "401":
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '403':
+        "403":
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '404':
+        "404":
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '500':
+        "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -1004,28 +1038,28 @@ paths:
           schema:
             $ref: '#/definitions/SearchRoleAuditRequest'
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             type: string
             format: binary
-        '400':
+        "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '401':
+        "401":
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '403':
+        "403":
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '404':
+        "404":
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '500':
+        "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -1044,27 +1078,27 @@ paths:
         - $ref: '#/parameters/Offset'
         - $ref: '#/parameters/SortBy'
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             $ref: '#/definitions/SearchUserResponse'
-        '400':
+        "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '401':
+        "401":
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '403':
+        "403":
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '404':
+        "404":
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '500':
+        "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -1082,27 +1116,27 @@ paths:
           schema:
             $ref: '#/definitions/CreateUserRequest'
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             $ref: '#/definitions/CreateUserResponse'
-        '400':
+        "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '401':
+        "401":
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '403':
+        "403":
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '404':
+        "404":
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '500':
+        "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -1124,27 +1158,27 @@ paths:
           schema:
             $ref: '#/definitions/SearchUserRequest'
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             $ref: '#/definitions/SearchUserResponse'
-        '400':
+        "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '401':
+        "401":
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '403':
+        "403":
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '404':
+        "404":
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '500':
+        "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -1159,27 +1193,27 @@ paths:
         - $ref: '#/parameters/Access-Token'
         - $ref: '#/parameters/User-Id'
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             $ref: '#/definitions/GetUserResponse'
-        '400':
+        "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '401':
+        "401":
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '403':
+        "403":
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '404':
+        "404":
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '500':
+        "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -1198,27 +1232,27 @@ paths:
           schema:
             $ref: '#/definitions/UpdateUserRequest'
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             $ref: '#/definitions/UpdateUserResponse'
-        '400':
+        "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '401':
+        "401":
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '403':
+        "403":
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '404':
+        "404":
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '500':
+        "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -1232,27 +1266,27 @@ paths:
         - $ref: '#/parameters/Access-Token'
         - $ref: '#/parameters/User-Id'
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             $ref: '#/definitions/DeleteUserResponse'
-        '400':
+        "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '401':
+        "401":
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '403':
+        "403":
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '404':
+        "404":
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '500':
+        "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -1274,28 +1308,28 @@ paths:
           schema:
             $ref: '#/definitions/SearchUserRequest'
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             type: string
             format: binary
-        '400':
+        "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '401':
+        "401":
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '403':
+        "403":
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '404':
+        "404":
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '500':
+        "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -1315,27 +1349,27 @@ paths:
           type: file
           required: true
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             $ref: '#/definitions/ImportUserResponse'
-        '400':
+        "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '401':
+        "401":
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '403':
+        "403":
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '404':
+        "404":
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '500':
+        "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -1359,27 +1393,27 @@ paths:
           schema:
             $ref: '#/definitions/SearchUserAuditRequest'
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             $ref: '#/definitions/SearchUserAuditResponse'
-        '400':
+        "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '401':
+        "401":
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '403':
+        "403":
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '404':
+        "404":
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '500':
+        "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -1394,27 +1428,27 @@ paths:
         - $ref: '#/parameters/Access-Token'
         - $ref: '#/parameters/User-Audit-Id'
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             $ref: '#/definitions/GetUserAuditResponse'
-        '400':
+        "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '401':
+        "401":
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '403':
+        "403":
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '404':
+        "404":
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '500':
+        "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -1436,28 +1470,28 @@ paths:
           schema:
             $ref: '#/definitions/SearchUserAuditRequest'
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             type: string
             format: binary
-        '400':
+        "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '401':
+        "401":
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '403':
+        "403":
           description: Forbidden
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '404':
+        "404":
           description: Not found
           schema:
             $ref: '#/definitions/ErrorResponse'
-        '500':
+        "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
@@ -1503,6 +1537,12 @@ definitions:
     properties:
       data:
         $ref: '#/definitions/JWT'
+      status:
+        $ref: '#/definitions/ResponseStatus'
+  LogoutResponse:
+    properties:
+      data:
+        type: string
       status:
         $ref: '#/definitions/ResponseStatus'
   JWT:

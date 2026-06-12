@@ -11,6 +11,7 @@ import {
   getStoredTheme,
   setStoredTheme
 } from '@/service/Theme';
+import { logout as apiLogout } from '@/api/modules/Users';
 
 const SunIcon = () => (
   <svg
@@ -66,8 +67,9 @@ const Home: React.FC = () => {
   };
 
   const handleLogout = () => {
-    sessionStorage.removeItem('user');
-    navigate('/login');
+    apiLogout().finally(() => {
+      navigate('/login');
+    });
   };
 
   const handleTableNameSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
