@@ -20,6 +20,7 @@ import {
   IImportUsersPayload,
   ILoginRequest,
   ILoginResponse,
+  ILogoutResponse,
   IRefreshTokenResponse,
   ISearchUserRequest,
   ISearchUserResponse,
@@ -50,6 +51,31 @@ export const login = (
       url: `/users/login`,
       method: 'POST',
       data: loginRequest,
+      ...params
+    },
+    { ...extraConfig }
+  );
+/**
+ * @description Logout
+ *
+ * @tags users
+ * @name Logout
+ * @request POST:/users/logout
+ * @response `200` `ILogoutResponse` OK
+ * @response `400` `IErrorResponse` Bad Request
+ * @response `401` `IErrorResponse` Unauthorized
+ * @response `403` `IErrorResponse` Forbidden
+ * @response `404` `IErrorResponse` Not found
+ * @response `500` `IErrorResponse` Internal Server Error
+ */
+export const logout = (
+  params: RequestConfig = {},
+  extraConfig: Partial<IRequestExtraConfig> = {}
+) =>
+  request<ILogoutResponse>(
+    {
+      url: `/users/logout`,
+      method: 'POST',
       ...params
     },
     { ...extraConfig }

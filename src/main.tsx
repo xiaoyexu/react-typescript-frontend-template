@@ -1,9 +1,12 @@
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { userDevice, UIDeviceType } from '@/service/Utils';
+import { applyTheme, getStoredTheme } from '@/service/Theme';
 import WebApp from './app/web';
 import MobileApp from './app/mobile';
 import './index.scss';
+
+applyTheme(getStoredTheme());
 
 const root = createRoot(document.getElementById('root') as HTMLElement);
 
