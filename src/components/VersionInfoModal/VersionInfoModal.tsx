@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Spin, Empty, Descriptions, Typography } from 'antd';
+import { Modal, Spin, Empty, Descriptions, Typography, Card } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { getSystemInfo, ISystemInfoResponse } from '@/api/modules/SystemInfo';
 
@@ -40,7 +40,7 @@ const VersionInfoModal: React.FC<VersionInfoModalProps> = ({
     }
   };
 
-  const items = [
+  const backendItems = [
     {
       key: 'commitMessage',
       label: t('commitMessage'),
@@ -87,13 +87,54 @@ const VersionInfoModal: React.FC<VersionInfoModalProps> = ({
     }
   ];
 
+  const frontendItems = [
+    {
+      key: 'version',
+      label: t('version'),
+      children: (
+        <Text copyable style={{ fontFamily: 'Monaco, Consolas, monospace' }}>
+          {__APP_VERSION__}
+        </Text>
+      ),
+      span: 2
+    },
+    {
+      key: 'gitCommit',
+      label: t('gitCommit'),
+      children: (
+        <Text copyable style={{ fontFamily: 'Monaco, Consolas, monospace' }}>
+          {__GIT_COMMIT__}
+        </Text>
+      ),
+      span: 1
+    },
+    {
+      key: 'branch',
+      label: t('branch'),
+      children: <Text>{__GIT_BRANCH__}</Text>,
+      span: 1
+    },
+    {
+      key: 'buildTime',
+      label: t('buildTime'),
+      children: <Text>{new Date(__BUILD_TIME__).toLocaleString()}</Text>,
+      span: 1
+    },
+    {
+      key: 'environment',
+      label: t('environment'),
+      children: <Text>{__APP_ENV__}</Text>,
+      span: 1
+    }
+  ];
+
   return (
     <Modal
       title={t('versionInfo')}
       open={open}
       onCancel={onClose}
       footer={null}
-      width={600}
+      width={700}
       bodyStyle={{ maxHeight: '70vh', overflowY: 'auto' }}
     >
       {loading && (
@@ -109,7 +150,29 @@ const VersionInfoModal: React.FC<VersionInfoModalProps> = ({
       )}
 
       {data && !loading && (
-        <Descriptions bordered column={2} size="small" items={items} />
+        <>
+          <Card
+            size="small"
+            title={t('backendInfo')}
+            style={{ marginBottom: 16 }}
+          >
+            <Descriptions
+              bordered
+              column={2}
+              size="small"
+              items={backendItems}
+            />
+          </Card>
+
+          <Card size="small" title={t('frontendInfo')}>
+            <Descriptions
+              bordered
+              column={2}
+              size="small"
+              items={frontendItems}
+            />
+          </Card>
+        </>
       )}
     </Modal>
   );

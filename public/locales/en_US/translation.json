@@ -65,5 +65,11 @@
   "buildTime": "Build Time",
   "buildVersion": "Build Version",
   "buildArtifact": "Artifact",
-  "buildGroup": "Group"
+  "buildGroup": "Group",
+  "backendInfo": "Backend Info",
+  "frontendInfo": "Frontend Info",
+  "version": "Version",
+  "gitCommit": "Git Commit",
+  "branch": "Branch",
+  "environment": "Environment"
 }
