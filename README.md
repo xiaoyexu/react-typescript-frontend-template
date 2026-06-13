@@ -416,7 +416,7 @@ base: '/tadmin/'; // Base path for deployment
 ```typescript
 // vite.config.ts
 proxy: {
-  '/api/v1': {
+  '/open-api/v1': {
     target: 'http://localhost:6666',
     changeOrigin: true
   }
