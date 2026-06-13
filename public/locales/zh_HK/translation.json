@@ -65,5 +65,11 @@
   "buildTime": "構建時間",
   "buildVersion": "構建版本",
   "buildArtifact": "構件名",
-  "buildGroup": "分組"
+  "buildGroup": "分組",
+  "backendInfo": "後端資訊",
+  "frontendInfo": "前端資訊",
+  "version": "版本",
+  "gitCommit": "Git 提交",
+  "branch": "分支",
+  "environment": "環境"
 }

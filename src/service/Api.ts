@@ -6,8 +6,8 @@ import i18n from '@/i18n';
 import qs from 'qs';
 import { getAuth, setAuth } from '@/app/auth/useAuth';
 
-// Base URL for the API
-const API_BASE_URL = '/api/v1';
+// Base URL for the API - configured in one place for easy maintenance
+export const API_BASE_URL = import.meta.env.VITE_BASE_PATH || '/open-api/v1';
 
 const isRefreshToken = (config: any) => {
   return config.url === `/user/refresh`;
@@ -123,7 +123,7 @@ const request = <T>(
     _extraConfig.needToken
   );
   const defaultConfig = {
-    baseURL: '/api/v1',
+    baseURL: API_BASE_URL,
     timeout: 3600000,
     paramsSerializer: (params: unknown) => {
       return qs.stringify(params, { arrayFormat: 'comma' });
