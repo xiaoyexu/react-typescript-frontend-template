@@ -7,7 +7,7 @@ import qs from 'qs';
 import { getAuth, setAuth } from '@/app/auth/useAuth';
 
 // Base URL for the API - configured in one place for easy maintenance
-export const API_BASE_URL = import.meta.env.BASE_PATH;
+export const API_BASE_URL = import.meta.env.VITE_BASE_PATH || '/open-api/v1';
 
 const isRefreshToken = (config: any) => {
   return config.url === `/user/refresh`;
