@@ -58,5 +58,12 @@
   "click_to_upload": "點擊上傳",
   "uploadResourceFile": "上傳資源文件",
   "uploadSuccess": "上傳成功",
-  "uploadFailed": "上傳失敗"
+  "uploadFailed": "上傳失敗",
+  "versionInfo": "版本資訊",
+  "commitMessage": "提交資訊",
+  "userName": "用戶名",
+  "buildTime": "構建時間",
+  "buildVersion": "構建版本",
+  "buildArtifact": "構件名",
+  "buildGroup": "分組"
 }
