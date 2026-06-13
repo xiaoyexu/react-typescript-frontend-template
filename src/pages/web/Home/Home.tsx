@@ -136,9 +136,12 @@ const Home: React.FC = () => {
             <button className="btn btn-secondary" onClick={handleLogout}>
               {t('logout')}
             </button>
-            <Button type="primary" onClick={() => setIsVersionModalOpen(true)}>
+            <button
+              className="btn btn-secondary"
+              onClick={() => setIsVersionModalOpen(true)}
+            >
               {t('versionInfo')}
-            </Button>
+            </button>
           </Flex>
         </div>
       </header>
