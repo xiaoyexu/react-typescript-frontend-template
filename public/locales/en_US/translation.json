@@ -58,5 +58,12 @@
   "click_to_upload": "Click to upload",
   "uploadResourceFile": "Upload Resource File",
   "uploadSuccess": "Upload successful",
-  "uploadFailed": "Upload failed"
+  "uploadFailed": "Upload failed",
+  "versionInfo": "Version Info",
+  "commitMessage": "Commit Message",
+  "userName": "User Name",
+  "buildTime": "Build Time",
+  "buildVersion": "Build Version",
+  "buildArtifact": "Artifact",
+  "buildGroup": "Group"
 }

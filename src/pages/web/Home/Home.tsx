@@ -12,6 +12,7 @@ import {
   setStoredTheme
 } from '@/service/Theme';
 import { logout as apiLogout } from '@/api/modules/Users';
+import { VersionInfoModal } from '@/components/VersionInfoModal';
 
 const SunIcon = () => (
   <svg
@@ -56,6 +57,7 @@ const Home: React.FC = () => {
   const availableTables = useMemo(() => getTables(searchTerm), [searchTerm]);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
   const [themeMode, setThemeMode] = useState<ThemeMode>(() => getStoredTheme());
+  const [isVersionModalOpen, setIsVersionModalOpen] = useState(false);
 
   useEffect(() => {
     applyTheme(themeMode);
@@ -134,6 +136,9 @@ const Home: React.FC = () => {
             <button className="btn btn-secondary" onClick={handleLogout}>
               {t('logout')}
             </button>
+            <Button type="primary" onClick={() => setIsVersionModalOpen(true)}>
+              {t('versionInfo')}
+            </Button>
           </Flex>
         </div>
       </header>
@@ -180,6 +185,10 @@ const Home: React.FC = () => {
           />
         </div>
       </div>
+      <VersionInfoModal
+        open={isVersionModalOpen}
+        onClose={() => setIsVersionModalOpen(false)}
+      />
     </div>
   );
 };
