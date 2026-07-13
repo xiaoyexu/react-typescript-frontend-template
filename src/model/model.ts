@@ -15,6 +15,7 @@ interface IUser {
   username: string;
   displayName: string;
   role: string;
+  accessToken: string;
 }
 
 interface TokenPayload {

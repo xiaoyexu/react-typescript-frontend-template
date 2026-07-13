@@ -1,19 +1,7 @@
-import { Navigate, Route, Routes } from 'react-router-dom';
-import { useAuth } from '../auth/useAuth';
+import { Route, Routes } from 'react-router-dom';
 
 import Home from '@/pages/mobile/Home';
 import Page2 from '@/pages/mobile/Page2/';
-
-// Protected route component
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { isAuthenticated } = useAuth();
-
-  if (isAuthenticated) {
-    return <>{children}</>;
-  } else {
-    return <Navigate to="/login" replace />;
-  }
-};
 
 export default () => {
   return (
